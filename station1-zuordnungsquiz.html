@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="de-DE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Station 1 · Zuordnungsquiz „Wo ist der Hafen?"</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Grundfarben */
+        --bg: #edfdf9;
+        --ink: #1d4242;
+        --muted: #4f7574;
+
+        /* Überschriften */
+        --head: #018783;
+        --head-soft: #d5f5ee;
+
+        /* Buttons */
+        --btn: #025e90;
+        --btn-deep: #01476e;
+        --btn-soft: #ddeef9;
+
+        /* Russische Übersetzung */
+        --ru: #7a1a5c;
+
+        --line: #c9e8e0;
+        --miss: #b3261e;
+        --miss-soft: #fbe9e7;
+        --ok: #1e6f53;
+        --ok-soft: #d9f2e6;
+        --radius: 14px;
+
+        /* Schriften */
+        --font-text: "Neue Haas Unica", "Neue Haas Unica W1G",
+          "Neue Haas Grotesk Text Pro", "Helvetica Neue", Helvetica, Arial,
+          sans-serif;
+        --font-head: "Titillium Web", "Neue Haas Unica", "Helvetica Neue",
+          Helvetica, Arial, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 18px/1.6 var(--font-text);
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-head);
+        color: var(--head);
+        line-height: 1.2;
+        font-weight: 700;
+        margin: 0 0 0.5em;
+      }
+      h1 {
+        font-size: 2.2rem;
+      }
+      h2 {
+        font-size: 1.6rem;
+      }
+      p {
+        margin: 0.4em 0 1em;
+      }
+      button {
+        font: inherit;
+      }
+      :focus-visible {
+        outline: 3px solid var(--btn);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 2rem 1.2rem 4rem;
+      }
+      .kicker {
+        display: inline-block;
+        font-family: var(--font-head);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--head);
+        background: var(--head-soft);
+        border-radius: 999px;
+        padding: 0.2em 0.9em;
+        margin-bottom: 0.6rem;
+      }
+      .ru {
+        color: var(--ru);
+        font-size: 1em;
+      }
+      .ru::before {
+        content: "· ";
+      }
+
+      /* Fortschritt */
+      .progress {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin: 0 0 1rem;
+      }
+      .progress .ptext {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .pdots {
+        display: flex;
+        gap: 0.35rem;
+      }
+      .pdots span {
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid var(--line);
+      }
+      .pdots span.right {
+        background: var(--ok);
+        border-color: var(--ok);
+      }
+      .pdots span.wrong {
+        background: var(--miss);
+        border-color: var(--miss);
+      }
+      .pdots span.now {
+        border-color: var(--btn);
+        box-shadow: 0 0 0 3px var(--btn-soft);
+      }
+
+      /* Eine Bildkarte */
+      .gcard {
+        background: #fff;
+        border: 2px solid var(--line);
+        border-radius: var(--radius);
+        padding: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+      .gcard[data-result="right"] {
+        border-color: var(--ok);
+      }
+      .gcard[data-result="wrong"] {
+        border-color: var(--miss);
+      }
+      .gcard .gimg {
+        all: unset;
+        cursor: zoom-in;
+        display: block;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .gcard .gimg:focus-visible {
+        outline: 3px solid var(--btn);
+        outline-offset: 2px;
+      }
+      .gcard .gimg img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 3/2;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .gcard figcaption {
+        margin: 0;
+        font-weight: 800;
+        color: var(--ink);
+        font-size: 1.15rem;
+      }
+
+      .sortrow {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+      .sortrow button {
+        flex: 1;
+        min-width: 130px;
+        border: 2px solid var(--btn);
+        background: #fff;
+        color: var(--btn);
+        border-radius: 999px;
+        padding: 0.5em 0.8em;
+        font-weight: 700;
+        font-size: 1.05rem;
+        cursor: pointer;
+        line-height: 1.25;
+      }
+      .sortrow button small {
+        display: block;
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: var(--ru);
+      }
+      .sortrow button:hover:not([disabled]) {
+        background: var(--btn-soft);
+      }
+      .sortrow button[disabled] {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .sortrow button.picked[disabled] {
+        opacity: 1;
+      }
+      .sortrow button.picked.right {
+        background: var(--ok-soft);
+        border-color: var(--ok);
+        color: var(--ok);
+      }
+      .sortrow button.picked.wrong {
+        background: var(--miss-soft);
+        border-color: var(--miss);
+        color: var(--miss);
+      }
+
+      .verdict {
+        font-size: 0.95rem;
+        min-height: 1.2em;
+      }
+      .verdict.right {
+        color: var(--ok);
+        font-weight: 700;
+      }
+      .verdict.wrong {
+        color: var(--miss);
+        font-weight: 700;
+      }
+      .verdict .ru {
+        display: block;
+        font-weight: 600;
+        color: var(--ru);
+      }
+      .verdict .ru::before {
+        content: "";
+      }
+
+      .btn {
+        border: 2px solid var(--btn);
+        background: #fff;
+        color: var(--btn);
+        border-radius: 999px;
+        padding: 0.45em 1.3em;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .btn:hover {
+        background: var(--btn-soft);
+      }
+      .btn.primary {
+        background: var(--btn);
+        color: #fff;
+      }
+      .btn.primary:hover {
+        background: var(--btn-deep);
+      }
+      /* Auf der gefüllten Fläche bleibt die Übersetzung weiß — #7A1A5C wäre dort nicht lesbar */
+      .btn .ru {
+        color: inherit;
+        opacity: 0.85;
+      }
+      .btn:not(.primary) .ru {
+        color: var(--ru);
+        opacity: 1;
+      }
+      .navrow {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+      }
+      .navrow[hidden] {
+        display: none;
+      }
+
+      /* Abschlussübersicht */
+      #summary[hidden] {
+        display: none;
+      }
+      .score {
+        background: var(--head-soft);
+        border-radius: var(--radius);
+        padding: 1rem 1.2rem;
+        margin: 0 0 1.2rem;
+      }
+      .score .big {
+        font-family: var(--font-head);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--head);
+        margin: 0;
+      }
+      .score .msg {
+        margin: 0.3em 0 0;
+      }
+      .score .ru {
+        display: block;
+        font-weight: 600;
+      }
+      .score .ru::before {
+        content: "";
+      }
+
+      .sumgrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.8rem;
+      }
+      .sumcard {
+        background: #fff;
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .sumcard.right {
+        border-color: var(--ok);
+      }
+      .sumcard.wrong {
+        border-color: var(--miss);
+      }
+      .sumcard img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 3/2;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .sumcard .name {
+        font-weight: 700;
+        font-size: 0.85rem;
+        line-height: 1.3;
+      }
+      .sumcard .name .ru {
+        display: block;
+        font-size: 0.95em;
+      }
+      .sumcard .name .ru::before {
+        content: "";
+      }
+      .badge {
+        font-size: 0.82rem;
+        font-weight: 800;
+        border-radius: 999px;
+        padding: 0.1em 0.7em;
+        align-self: flex-start;
+      }
+      .badge.right {
+        background: var(--ok-soft);
+        color: var(--ok);
+      }
+      .badge.wrong {
+        background: var(--miss-soft);
+        color: var(--miss);
+      }
+      .sumcard .fix {
+        font-size: 0.8rem;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      .resetrow {
+        margin-top: 1.4rem;
+      }
+
+      /* Lightbox */
+      #lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(29, 66, 66, 0.92);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        z-index: 100;
+      }
+      #lightbox.open {
+        display: flex;
+      }
+      #lightbox .lb-inner {
+        background: var(--bg);
+        border-radius: var(--radius);
+        padding: 1rem;
+        max-width: 900px;
+        width: 100%;
+        max-height: 92vh;
+        overflow: auto;
+      }
+      #lightbox img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+      #lightbox .lb-bar {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 0.6rem;
+      }
+      #lb-cap {
+        font-weight: 800;
+        margin: 0.6rem 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <span class="kicker">Station 1</span>
+      <h1>Was gehört zum Hafen? <span class="ru" lang="ru">Где порт?</span></h1>
+
+      <!-- ===== Quiz: ein Bild nach dem anderen ===== -->
+      <div id="quiz">
+        <div class="progress">
+          <span class="ptext" id="ptext"></span>
+          <span class="pdots" id="pdots" aria-hidden="true"></span>
+        </div>
+
+        <div class="gcard" id="card">
+          <button type="button" class="gimg" id="cardimg">
+            <img id="cardpic" src="" alt="" />
+          </button>
+          <figcaption id="cardcap"></figcaption>
+          <div class="sortrow">
+            <button type="button" data-pick="hafen">
+              ⚓ Hafen <small lang="ru">порт</small>
+            </button>
+            <button type="button" data-pick="nein">
+              ✗ kein Hafen <small lang="ru">не порт</small>
+            </button>
+          </div>
+          <div class="verdict" id="verdict" role="status"></div>
+        </div>
+
+        <div class="navrow" hidden id="navrow">
+          <button type="button" class="btn primary" id="next"></button>
+        </div>
+      </div>
+
+      <!-- ===== Übersicht zum Schluss ===== -->
+      <div id="summary" hidden>
+        <h2>
+          Deine Übersicht <span class="ru" lang="ru">Твой результат</span>
+        </h2>
+        <div class="score">
+          <p class="big" id="score-big"></p>
+          <p class="msg" id="score-msg"></p>
+        </div>
+        <div class="sumgrid" id="sumgrid"></div>
+        <div class="resetrow">
+          <button type="button" class="btn primary" id="reset">
+            ↺ Noch einmal <span class="ru" lang="ru">ещё раз</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Bild groß ansehen"
+    >
+      <div class="lb-inner">
+        <img id="lb-pic" src="" alt="" />
+        <p id="lb-cap"></p>
+        <div class="lb-bar">
+          <button type="button" class="btn" id="lb-close">
+            ✕ Schließen <span class="ru" lang="ru">закрыть</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var BILDER = [
+          {
+            nr: 1,
+            src: "Containerschiff.jpg",
+            de: "Containerschiff",
+            ru: "контейнеровоз",
+            answer: "hafen",
+            alt: "Ein großes Schiff voller bunter Container fährt auf dem Wasser. Es zeigt, wie Waren nach Hamburg kommen.",
+            why: "Containerschiffe bringen Waren über die Elbe in den Hafen.",
+            whyRu: "Контейнеровозы привозят товары по Эльбе в порт.",
+          },
+          {
+            nr: 2,
+            src: "Kran.jpg",
+            de: "Kräne",
+            ru: "краны",
+            answer: "hafen",
+            alt: "Mehrere hohe Kräne stehen in einer Reihe am Wasser und heben Container. Sie zeigen, wo Schiffe be- und entladen werden.",
+            why: "Kräne heben die Container von den Schiffen — das gibt es nur im Hafen.",
+            whyRu:
+              "Краны снимают контейнеры с кораблей — это бывает только в порту.",
+          },
+          {
+            nr: 3,
+            src: "Eifelturm.jpg",
+            de: "Eiffelturm",
+            ru: "Эйфелева башня",
+            answer: "nein",
+            alt: "Ein hoher Turm aus Stahl in einer großen Stadt. Er steht in Paris, nicht in Hamburg.",
+            why: "Der Eiffelturm steht in Paris — einer ganz anderen Stadt.",
+            whyRu: "Эйфелева башня стоит в Париже — совсем в другом городе.",
+          },
+          {
+            nr: 4,
+            src: "Speicherstadt.jpg",
+            de: "Speicherstadt",
+            ru: "Шпайхерштадт (город складов)",
+            answer: "hafen",
+            alt: "Hohe alte Lagerhäuser aus rotem Backstein stehen direkt an einem Kanal. Hier wurden früher Waren gelagert.",
+            why: "In der Speicherstadt wurden früher die Waren aus dem Hafen gelagert.",
+            whyRu: "В Шпайхерштадте раньше хранили товары из порта.",
+          },
+          {
+            nr: 5,
+            src: "Rathaus.jpg",
+            de: "Hamburger Rathaus",
+            ru: "ратуша Гамбурга",
+            answer: "nein",
+            alt: "Ein prächtiges altes Gebäude mit einem hohen Turm an einem Platz in der Stadt. Es liegt in Hamburg, aber nicht im Hafen.",
+            why: "Das Rathaus steht mitten in Hamburg — aber es gehört nicht zum Hafen.",
+            whyRu:
+              "Ратуша стоит в центре Гамбурга — но она не относится к порту.",
+          },
+          {
+            nr: 6,
+            src: "Landungsbrücken.jpg",
+            de: "Landungsbrücken",
+            ru: "Ландунгсбрюкен (причалы)",
+            answer: "hafen",
+            alt: "Ein langes Gebäude mit einem Uhrenturm direkt am Wasser, davor legen Schiffe an. Hier steigen Menschen in Schiffe ein und aus.",
+            why: "An den Landungsbrücken steigen Menschen in Schiffe ein und aus — sie gehören zum Hafen.",
+            whyRu:
+              "На Ландунгсбрюкен люди садятся на корабли и сходят с них — это часть порта.",
+          },
+          {
+            nr: 7,
+            src: "Brandenburger Tor.jpg",
+            de: "Brandenburger Tor",
+            ru: "Бранденбургские ворота",
+            answer: "nein",
+            alt: "Ein großes Tor aus Stein mit Säulen. Es steht in Berlin, nicht in Hamburg.",
+            why: "Das Brandenburger Tor steht in Berlin — nicht in Hamburg.",
+            whyRu: "Бранденбургские ворота стоят в Берлине — не в Гамбурге.",
+          },
+        ];
+
+        var quiz = document.getElementById("quiz"),
+          summary = document.getElementById("summary"),
+          card = document.getElementById("card"),
+          pic = document.getElementById("cardpic"),
+          cap = document.getElementById("cardcap"),
+          verdict = document.getElementById("verdict"),
+          ptext = document.getElementById("ptext"),
+          pdots = document.getElementById("pdots"),
+          navrow = document.getElementById("navrow"),
+          nextBtn = document.getElementById("next"),
+          pickBtns = Array.prototype.slice.call(
+            card.querySelectorAll(".sortrow button"),
+          );
+
+        var i = 0,
+          results = [];
+
+        function label(b) {
+          return "Bild " + b.nr + ": " + b.de;
+        }
+
+        function drawDots() {
+          pdots.innerHTML = "";
+          BILDER.forEach(function (b, k) {
+            var s = document.createElement("span");
+            if (results[k]) s.className = results[k];
+            else if (k === i) s.className = "now";
+            pdots.appendChild(s);
+          });
+        }
+
+        function show() {
+          var b = BILDER[i];
+          delete card.dataset.result;
+          pic.src = b.src;
+          pic.alt = b.alt;
+          cap.innerHTML =
+            label(b) + ' <span class="ru" lang="ru">' + b.ru + "</span>";
+          verdict.className = "verdict";
+          verdict.innerHTML = "";
+          pickBtns.forEach(function (x) {
+            x.disabled = false;
+            x.className = "";
+          });
+          navrow.hidden = true;
+          ptext.textContent =
+            "Bild " +
+            (i + 1) +
+            " von " +
+            BILDER.length +
+            " · картинка " +
+            (i + 1) +
+            " из " +
+            BILDER.length;
+          drawDots();
+        }
+
+        pickBtns.forEach(function (b) {
+          b.addEventListener("click", function () {
+            if (card.dataset.result) return;
+            var cur = BILDER[i],
+              right = b.dataset.pick === cur.answer;
+            card.dataset.result = right ? "right" : "wrong";
+            results[i] = right ? "right" : "wrong";
+            b.className = "picked " + (right ? "right" : "wrong");
+            verdict.className = "verdict " + (right ? "right" : "wrong");
+            verdict.innerHTML =
+              (right ? "✓ Richtig! " : "✗ Nicht ganz. ") +
+              cur.why +
+              '<span class="ru" lang="ru">' +
+              (right ? "✓ Правильно! " : "✗ Не совсем. ") +
+              cur.whyRu +
+              "</span>";
+            pickBtns.forEach(function (x) {
+              x.disabled = true;
+            });
+            nextBtn.innerHTML =
+              i + 1 < BILDER.length
+                ? 'Weiter → <span class="ru" lang="ru">дальше</span>'
+                : 'Zur Übersicht → <span class="ru" lang="ru">к результату</span>';
+            navrow.hidden = false;
+            drawDots();
+            nextBtn.focus();
+          });
+        });
+
+        nextBtn.addEventListener("click", function () {
+          if (i + 1 < BILDER.length) {
+            i++;
+            show();
+          } else showSummary();
+        });
+
+        function showSummary() {
+          var right = results.filter(function (r) {
+            return r === "right";
+          }).length;
+          document.getElementById("score-big").innerHTML =
+            right +
+            " von " +
+            BILDER.length +
+            " richtig" +
+            '<span class="ru" lang="ru">' +
+            right +
+            " из " +
+            BILDER.length +
+            " правильно</span>";
+
+          var msg = document.getElementById("score-msg");
+          if (right === BILDER.length) {
+            msg.innerHTML =
+              "Alle " +
+              right +
+              " richtig! Du bist ein Hafen-Profi! ⚓" +
+              '<span class="ru" lang="ru">Все ' +
+              right +
+              " правильно! Ты знаток порта! ⚓</span>";
+          } else {
+            msg.innerHTML =
+              "Schau dir die roten noch einmal an." +
+              '<span class="ru" lang="ru">Посмотри ещё раз на красные.</span>';
+          }
+
+          var grid = document.getElementById("sumgrid");
+          grid.innerHTML = "";
+          BILDER.forEach(function (b, k) {
+            var ok = results[k] === "right";
+            var el = document.createElement("div");
+            el.className = "sumcard " + (ok ? "right" : "wrong");
+            var richtig =
+              b.answer === "hafen" ? "Hafen · порт" : "kein Hafen · не порт";
+            el.innerHTML =
+              '<img src="' +
+              b.src +
+              '" alt="' +
+              b.alt.replace(/"/g, "&quot;") +
+              '">' +
+              '<span class="badge ' +
+              (ok ? "right" : "wrong") +
+              '">' +
+              (ok ? "✓ richtig · верно" : "✗ falsch · неверно") +
+              "</span>" +
+              '<span class="name">' +
+              label(b) +
+              '<span class="ru" lang="ru">' +
+              b.ru +
+              "</span></span>" +
+              (ok
+                ? ""
+                : '<span class="fix">Richtig wäre: <b>' +
+                  richtig +
+                  "</b></span>");
+            grid.appendChild(el);
+          });
+
+          quiz.hidden = true;
+          summary.hidden = false;
+          summary.scrollIntoView({ block: "start" });
+          document.getElementById("reset").focus();
+        }
+
+        document.getElementById("reset").addEventListener("click", function () {
+          i = 0;
+          results = [];
+          summary.hidden = true;
+          quiz.hidden = false;
+          show();
+          quiz.scrollIntoView({ block: "start" });
+        });
+
+        // ---------- Lightbox ----------
+        var lb = document.getElementById("lightbox"),
+          lbPic = document.getElementById("lb-pic"),
+          lastFocus = null;
+        document
+          .getElementById("cardimg")
+          .addEventListener("click", function () {
+            lastFocus = document.activeElement;
+            lbPic.src = pic.src;
+            lbPic.alt = pic.alt;
+            document.getElementById("lb-cap").textContent = cap.textContent;
+            lb.classList.add("open");
+            document.getElementById("lb-close").focus();
+          });
+        function closeLb() {
+          lb.classList.remove("open");
+          if (lastFocus) lastFocus.focus();
+        }
+        document.getElementById("lb-close").addEventListener("click", closeLb);
+        document.addEventListener("keydown", function (e) {
+          if (lb.classList.contains("open") && e.key === "Escape") closeLb();
+        });
+        lb.addEventListener("click", function (e) {
+          if (e.target === lb) closeLb();
+        });
+
+        show();
+      })();
+    </script>
+  </body>
+</html>
