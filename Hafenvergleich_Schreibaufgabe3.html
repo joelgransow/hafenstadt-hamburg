@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hafen früher und heute – Schreibaufgabe</title>
+  <style>
+    :root {
+      --mint: #eaf9f6;
+      --petrol: #173f3d;
+      --teal: #00968e;
+      --teal-dark: #00766f;
+      --purple: #92146f;
+      --purple-soft: #f8eaf4;
+      --white: #ffffff;
+      --line: #9ccfca;
+      --shadow: 0 12px 30px rgba(0, 79, 89, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--mint); }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        radial-gradient(circle at 10% 3%, rgba(255,255,255,.78), transparent 23rem),
+        var(--mint);
+      color: var(--petrol);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, textarea, summary { font: inherit; }
+    button, summary { -webkit-tap-highlight-color: transparent; }
+
+    .page-shell {
+      width: min(1080px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 8px 0 16px;
+    }
+
+    .compact-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 14px;
+      border: 2px solid rgba(0,150,142,.16);
+      border-radius: 18px;
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow, .eyebrow-ru { margin: 0; }
+
+    .eyebrow {
+      color: var(--teal-dark);
+      font-size: 1.05rem;
+      font-weight: 800;
+    }
+
+    .eyebrow-ru {
+      margin-top: 2px;
+      color: var(--purple);
+      font-size: .86rem;
+    }
+
+    .save-pill {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      max-width: 210px;
+      padding: 6px 9px;
+      border: 2px solid rgba(0,150,142,.23);
+      border-radius: 16px;
+      background: var(--white);
+    }
+
+    .save-pill.is-error { border-color: rgba(146,20,111,.35); }
+
+    .save-icon {
+      display: grid;
+      flex: 0 0 26px;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 800;
+    }
+
+    .save-pill.is-error .save-icon { background: var(--purple); }
+
+    .save-status, .save-status-ru {
+      margin: 0;
+      font-size: .72rem;
+      line-height: 1.18;
+    }
+
+    .save-status { font-weight: 800; }
+    .save-status-ru { margin-top: 2px; color: var(--purple); }
+
+    .progress-wrap {
+      display: grid;
+      grid-template-columns: auto minmax(120px, 1fr);
+      gap: 10px;
+      align-items: center;
+      margin: 8px 3px 7px;
+    }
+
+    .progress-copy { font-weight: 800; }
+    .progress-copy span { color: var(--purple); font-weight: 500; }
+
+    .progress-track {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(0,85,104,.13);
+    }
+
+    .progress-bar {
+      width: 33.333%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal), #35bdb5);
+      transition: width 220ms ease;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .question-card, .finish-card {
+      padding: clamp(14px, 2.5vw, 21px);
+      border: 1px solid rgba(0,85,104,.12);
+      border-radius: 20px;
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+    }
+
+    .question-heading {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 11px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .number-badge {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--white);
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--petrol);
+      font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+      line-height: 1.22;
+    }
+
+    .question-ru {
+      margin: 3px 0 0;
+      color: var(--purple);
+      font-size: clamp(.9rem, 2vw, 1.05rem);
+      line-height: 1.3;
+    }
+
+    textarea {
+      --writing-line-height: 36px;
+      display: block;
+      width: 100%;
+      min-height: 128px;
+      resize: none;
+      padding: 9px 17px 13px;
+      border: 3px solid var(--line);
+      border-radius: 18px;
+      outline: none;
+      background:
+        linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 33px,
+          rgba(0,85,104,.18) 33px,
+          rgba(0,85,104,.18) 34px,
+          transparent 34px
+        ),
+        var(--white);
+      background-attachment: local;
+      background-position: 0 2px;
+      background-repeat: repeat-y;
+      background-size: 100% var(--writing-line-height);
+      color: var(--petrol);
+      font-size: 1.08rem;
+      line-height: var(--writing-line-height);
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    textarea::placeholder { color: #6d8582; opacity: .72; }
+    textarea:focus { border-color: var(--purple); box-shadow: 0 0 0 5px rgba(146,20,111,.11); }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      gap: 9px;
+      margin-top: 9px;
+    }
+
+    .nav-button {
+      min-height: 44px;
+      padding: 7px 16px;
+      border: 0;
+      border-radius: 13px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 120ms ease, filter 120ms ease;
+    }
+
+    .nav-button:hover { filter: brightness(.97); }
+    .nav-button:active { transform: translateY(1px); }
+    .nav-button:focus-visible { outline: 4px solid rgba(146,20,111,.22); outline-offset: 2px; }
+    .nav-button:disabled { visibility: hidden; }
+
+    .button-back {
+      border: 2px solid var(--teal);
+      background: var(--white);
+      color: var(--teal-dark);
+    }
+
+    .button-next {
+      margin-left: auto;
+      background: var(--teal);
+      color: var(--white);
+    }
+
+    .button-next .ru-button, .button-back .ru-button {
+      display: block;
+      margin-top: 2px;
+      font-size: .76rem;
+      font-weight: 500;
+    }
+
+    .helper-card {
+      overflow: hidden;
+      border: 2px solid rgba(146,20,111,.2);
+      border-radius: 17px;
+      background: var(--purple-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .helper-card summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      cursor: pointer;
+      background: var(--purple);
+      color: var(--white);
+      font-weight: 800;
+      list-style: none;
+    }
+
+    .helper-card summary::-webkit-details-marker { display: none; }
+    .helper-card summary:focus-visible { outline: 4px solid rgba(0,150,142,.3); outline-offset: -5px; }
+    .summary-ru { display: block; margin-top: 2px; font-size: .76rem; font-weight: 500; }
+    .helper-arrow { font-size: 1.35rem; transition: transform 180ms ease; }
+    .helper-card[open] .helper-arrow { transform: rotate(180deg); }
+
+    .starter-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 15px;
+      list-style: none;
+    }
+
+    .starter-item {
+      padding: 11px 13px;
+      border-left: 4px solid var(--teal);
+      border-radius: 11px;
+      background: var(--white);
+    }
+
+    .starter-item p {
+      margin: 0;
+      font-size: .92rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .starter-item p + p {
+      margin-top: 4px;
+      color: var(--purple);
+      font-weight: 500;
+    }
+
+    .finish-card {
+      grid-column: 1 / -1;
+      text-align: center;
+    }
+
+    .finish-icon {
+      display: grid;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 14px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--white);
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .finish-card h1 { font-size: clamp(1.55rem, 4vw, 2.25rem); }
+    .finish-card p { margin: 8px 0 0; font-size: 1.08rem; }
+    .finish-card .finish-ru { color: var(--purple); }
+    .finish-card .navigation { justify-content: center; margin-top: 22px; }
+
+    [hidden] { display: none !important; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 820px) {
+      .compact-header { grid-template-columns: minmax(0, 1fr) auto; }
+      .task-grid { grid-template-columns: 1fr; }
+      .helper-card { grid-row: 1; }
+      .question-card { grid-row: 2; }
+    }
+
+    @media (max-width: 560px) {
+      .page-shell { width: min(100% - 12px, 1080px); padding-top: 5px; }
+      .compact-header { gap: 7px; padding: 8px 10px; border-radius: 15px; }
+      .save-pill { max-width: 165px; }
+      .progress-wrap { grid-template-columns: 1fr; gap: 5px; margin: 7px 2px 6px; }
+      .question-card { padding: 12px 11px; border-radius: 17px; }
+      .question-heading { grid-template-columns: 34px 1fr; gap: 9px; margin-bottom: 8px; }
+      .number-badge { width: 34px; height: 34px; font-size: 1rem; }
+      textarea { min-height: 122px; padding-inline: 12px; font-size: 1.03rem; }
+      .navigation { gap: 8px; }
+      .nav-button { min-height: 42px; padding: 6px 12px; font-size: .9rem; }
+    }
+
+    @media print {
+      body { background: white; }
+      .page-shell { width: 100%; padding: 0; }
+      .question-card, .finish-card, .compact-header, .helper-card { box-shadow: none; }
+      .navigation, .progress-wrap { display: none; }
+      .task-grid { grid-template-columns: 1fr; }
+      .helper-card { grid-row: auto; }
+      .question-card { display: block !important; break-inside: avoid; margin-bottom: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="compact-header" aria-label="Aufgabenhinweis">
+      <div>
+        <p class="eyebrow">Hafen früher und heute</p>
+        <p class="eyebrow-ru" lang="ru">Порт раньше и сегодня</p>
+      </div>
+
+      <div class="save-pill" id="save-pill" role="status" aria-live="polite" aria-label="Speicherstatus">
+        <span class="save-icon" id="save-icon" aria-hidden="true">✓</span>
+        <div>
+          <p class="save-status" id="save-status-de">Antworten werden geladen …</p>
+          <p class="save-status-ru" id="save-status-ru" lang="ru">Загружаются ответы …</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="question-view">
+      <div class="progress-wrap" aria-live="polite">
+        <div class="progress-copy">
+          <strong id="progress-de">Frage 1 von 3</strong>
+          <span id="progress-ru" lang="ru"> · Вопрос 1 из 3</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="task-grid">
+        <article class="question-card" data-step="0">
+          <div class="question-heading">
+            <span class="number-badge" aria-hidden="true">1</span>
+            <div>
+              <h1>Was ist auf den Bildern zu sehen?</h1>
+              <p class="question-ru" lang="ru">Что видно на фотографиях?</p>
+            </div>
+          </div>
+          <label class="sr-only" for="gemeinsamkeiten">Was ist auf den Bildern zu sehen?</label>
+          <textarea id="gemeinsamkeiten" name="gemeinsamkeiten" rows="4" placeholder="Schreibe hier deine Antwort …&#10;Напиши здесь свой ответ …"></textarea>
+          <nav class="navigation" id="question-navigation" aria-label="Zwischen den Fragen wechseln">
+            <button class="nav-button button-back" id="back-button" type="button" disabled>
+              ← Zurück
+              <span class="ru-button" lang="ru">Назад</span>
+            </button>
+            <button class="nav-button button-next" id="next-button" type="button">
+              Weiter →
+              <span class="ru-button" lang="ru">Далее</span>
+            </button>
+          </nav>
+        </article>
+
+        <article class="question-card" data-step="1" hidden>
+          <div class="question-heading">
+            <span class="number-badge" aria-hidden="true">2</span>
+            <div>
+              <h1>Was hat sich verändert?</h1>
+              <p class="question-ru" lang="ru">Что изменилось?</p>
+            </div>
+          </div>
+          <label class="sr-only" for="veraenderungen">Was hat sich verändert?</label>
+          <textarea id="veraenderungen" name="veraenderungen" rows="4" placeholder="Schreibe hier deine Antwort …&#10;Напиши здесь свой ответ …"></textarea>
+        </article>
+
+        <article class="question-card" data-step="2" hidden>
+          <div class="question-heading">
+            <span class="number-badge" aria-hidden="true">3</span>
+            <div>
+              <h1>Was ist neu hinzugekommen oder verschwunden?</h1>
+              <p class="question-ru" lang="ru">Что появилось нового или исчезло?</p>
+            </div>
+          </div>
+          <label class="sr-only" for="neu-oder-verschwunden">Was ist neu hinzugekommen oder verschwunden?</label>
+          <textarea id="neu-oder-verschwunden" name="neu-oder-verschwunden" rows="4" placeholder="Schreibe hier deine Antwort …&#10;Напиши здесь свой ответ …"></textarea>
+        </article>
+
+        <details class="helper-card" id="helper-card">
+          <summary>
+            <span>
+              Satzanfänge anzeigen
+              <span class="summary-ru" lang="ru">Показать начала предложений</span>
+            </span>
+            <span class="helper-arrow" aria-hidden="true">⌄</span>
+          </summary>
+          <ul class="starter-list">
+            <li class="starter-item"><p>Auf dem alten Bild sehe ich …</p><p lang="ru">На старой фотографии я вижу …</p></li>
+            <li class="starter-item"><p>Auf dem heutigen Bild sehe ich …</p><p lang="ru">На современной фотографии я вижу …</p></li>
+            <li class="starter-item"><p>Früher gab es …, heute gibt es …</p><p lang="ru">Раньше было …, а сегодня есть …</p></li>
+            <li class="starter-item"><p>Verändert hat sich …</p><p lang="ru">Изменилось …</p></li>
+            <li class="starter-item"><p>Gleich geblieben ist …</p><p lang="ru">Не изменилось …</p></li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
+    <section class="finish-card" id="finish-view" hidden aria-labelledby="finish-title">
+      <span class="finish-icon" aria-hidden="true">✓</span>
+      <h1 id="finish-title">Fertig! Deine Antworten sind gespeichert.</h1>
+      <p class="finish-ru" lang="ru">Готово! Твои ответы сохранены.</p>
+      <p>Du kannst sie später auf demselben Gerät und im selben Browser wieder öffnen.</p>
+      <p class="finish-ru" lang="ru">Ты сможешь снова открыть их позже на том же устройстве и в том же браузере.</p>
+      <div class="navigation">
+        <button class="nav-button button-back" id="edit-button" type="button">
+          Antworten ändern
+          <span class="ru-button" lang="ru">Изменить ответы</span>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "hafenvergleich-station4-v2";
+    const fields = Array.from(document.querySelectorAll("textarea"));
+    const cards = Array.from(document.querySelectorAll(".question-card"));
+    const savePill = document.getElementById("save-pill");
+    const saveIcon = document.getElementById("save-icon");
+    const statusDe = document.getElementById("save-status-de");
+    const statusRu = document.getElementById("save-status-ru");
+    const questionView = document.getElementById("question-view");
+    const finishView = document.getElementById("finish-view");
+    const progressDe = document.getElementById("progress-de");
+    const progressRu = document.getElementById("progress-ru");
+    const progressBar = document.getElementById("progress-bar");
+    const navigation = document.getElementById("question-navigation");
+    const backButton = document.getElementById("back-button");
+    const nextButton = document.getElementById("next-button");
+    const editButton = document.getElementById("edit-button");
+    const helperCard = document.getElementById("helper-card");
+
+    let currentStep = 0;
+    let completed = false;
+    let saveTimer;
+
+    function showStatus(german, russian, isError = false) {
+      statusDe.textContent = german;
+      statusRu.textContent = russian;
+      savePill.classList.toggle("is-error", isError);
+      saveIcon.textContent = isError ? "!" : "✓";
+    }
+
+    function collectAnswers() {
+      return Object.fromEntries(fields.map((field) => [field.id, field.value]));
+    }
+
+    function saveAnswers(showConfirmation = true) {
+      window.clearTimeout(saveTimer);
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            answers: collectAnswers(),
+            currentStep,
+            completed,
+            updatedAt: new Date().toISOString()
+          })
+        );
+
+        if (showConfirmation) {
+          const time = new Intl.DateTimeFormat("de-DE", {
+            hour: "2-digit",
+            minute: "2-digit"
+          }).format(new Date());
+          showStatus(
+            "Automatisch gespeichert · " + time + " Uhr",
+            "Автоматически сохранено · " + time
+          );
+        }
+      } catch (error) {
+        showStatus(
+          "Speichern ist hier leider nicht möglich.",
+          "К сожалению, сохранение здесь невозможно.",
+          true
+        );
+      }
+    }
+
+    function updateView(focusField = false) {
+      if (completed) {
+        questionView.hidden = true;
+        finishView.hidden = false;
+        saveAnswers(false);
+        return;
+      }
+
+      questionView.hidden = false;
+      finishView.hidden = true;
+
+      cards.forEach((card, index) => {
+        card.hidden = index !== currentStep;
+      });
+      cards[currentStep].appendChild(navigation);
+
+      const number = currentStep + 1;
+      progressDe.textContent = "Frage " + number + " von " + cards.length;
+      progressRu.textContent = " · Вопрос " + number + " из " + cards.length;
+      progressBar.style.width = ((number / cards.length) * 100) + "%";
+      backButton.disabled = currentStep === 0;
+
+      if (currentStep === cards.length - 1) {
+        nextButton.firstChild.textContent = "Fertig ";
+        nextButton.querySelector(".ru-button").textContent = "Готово";
+      } else {
+        nextButton.firstChild.textContent = "Weiter → ";
+        nextButton.querySelector(".ru-button").textContent = "Далее";
+      }
+
+      saveAnswers(false);
+
+      if (focusField) {
+        fields[currentStep].focus({ preventScroll: true });
+      }
+    }
+
+    function goForward() {
+      if (currentStep < cards.length - 1) {
+        currentStep += 1;
+        updateView(true);
+      } else {
+        completed = true;
+        saveAnswers();
+        updateView(false);
+        finishView.focus?.();
+      }
+    }
+
+    function goBack() {
+      if (currentStep > 0) {
+        currentStep -= 1;
+        updateView(true);
+      }
+    }
+
+    function loadAnswers() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const savedData = JSON.parse(stored);
+          fields.forEach((field) => {
+            field.value = savedData.answers?.[field.id] || "";
+          });
+          currentStep = Number.isInteger(savedData.currentStep)
+            ? Math.min(Math.max(savedData.currentStep, 0), cards.length - 1)
+            : 0;
+          completed = Boolean(savedData.completed);
+          showStatus(
+            "Gespeicherte Antworten geladen",
+            "Сохранённые ответы загружены"
+          );
+        } else {
+          showStatus("Automatisch gespeichert", "Автоматически сохранено");
+          saveAnswers(false);
+        }
+      } catch (error) {
+        showStatus(
+          "Speichern ist hier leider nicht möglich.",
+          "К сожалению, сохранение здесь невозможно.",
+          true
+        );
+      }
+    }
+
+    fields.forEach((field) => {
+      field.addEventListener("input", () => {
+        showStatus("Wird gespeichert …", "Сохраняется …");
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(() => saveAnswers(true), 350);
+      });
+    });
+
+    backButton.addEventListener("click", goBack);
+    nextButton.addEventListener("click", goForward);
+
+    editButton.addEventListener("click", () => {
+      completed = false;
+      currentStep = 0;
+      updateView(true);
+    });
+
+    const wideScreen = window.matchMedia("(min-width: 821px)");
+    helperCard.open = wideScreen.matches;
+    wideScreen.addEventListener?.("change", (event) => {
+      helperCard.open = event.matches;
+    });
+
+    window.addEventListener("pagehide", () => saveAnswers(false));
+
+    loadAnswers();
+    updateView(false);
+  </script>
+</body>
+</html>
