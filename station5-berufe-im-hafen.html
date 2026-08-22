@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Station 5 · Schreibaufgabe „Berufe im Hafen“</title>
+  <style>
+    :root {
+      --mint: #eaf9f6;
+      --petrol: #005568;
+      --petrol-dark: #173f3d;
+      --teal: #00968e;
+      --teal-soft: #d5f5ee;
+      --purple: #92146f;
+      --purple-soft: #f8eaf4;
+      --white: #ffffff;
+      --line: #9ccfca;
+      --muted: #4f7574;
+      --shadow: 0 12px 30px rgba(0, 79, 89, .10);
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--mint); }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background: radial-gradient(circle at 10% 3%, rgba(255,255,255,.76), transparent 24rem), var(--mint);
+      color: var(--petrol-dark);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    button, textarea { font: inherit; }
+    .page-shell { width: min(1200px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 72px; }
+
+    .page-head { margin-bottom: 26px; }
+    .kicker { display: inline-block; margin-bottom: .6rem; padding: .2em .9em; border-radius: 999px; background: var(--teal-soft); color: var(--teal); font-size: .85rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .page-head h1 { margin: 0; color: var(--petrol-dark); font-size: 2.2rem; line-height: 1.2; }
+    .page-head h1 .ru { color: var(--purple); font-size: 1em; font-weight: inherit; }
+    .page-head h1 .ru::before { content: "· "; }
+    .lead { margin: .7rem 0 0; color: var(--muted); font-size: 1.02rem; font-weight: 700; }
+    .lead .ru { display: block; color: var(--purple); font-weight: 400; }
+
+    .work-area { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 350px); grid-template-areas: "writing helpers"; gap: 26px; align-items: start; }
+    .writing-section { grid-area: writing; min-width: 0; }
+
+    .progress { display: flex; align-items: center; gap: .7rem; margin: 0 0 1rem; }
+    .progress .ptext { color: var(--muted); font-size: .9rem; font-weight: 800; white-space: nowrap; }
+    .progress .ptext .ru { color: var(--purple); font-weight: 400; }
+    .progress .ptext .ru::before { content: "· "; }
+    .pdots { display: flex; gap: .4rem; }
+    .pdots button { width: 15px; height: 15px; padding: 0; border: 2px solid var(--line); border-radius: 50%; background: var(--white); cursor: pointer; }
+    .pdots button.filled { border-color: var(--teal); background: var(--teal); }
+    .pdots button.now { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(146,20,111,.16); }
+    .pdots button:focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+
+    .question-card { padding: clamp(22px, 4vw, 34px); border: 1px solid rgba(0,85,104,.12); border-radius: 28px; background: rgba(255,255,255,.86); box-shadow: var(--shadow); }
+    .question-card[hidden] { display: none; }
+    .question-heading { display: grid; grid-template-columns: 50px 1fr; gap: 18px; align-items: start; margin-bottom: 22px; }
+    .number-badge { display: grid; width: 50px; height: 50px; place-items: center; border-radius: 50%; background: var(--teal); color: var(--white); font-size: 1.45rem; font-weight: 800; }
+    .question-card h2 { margin: 0; color: var(--petrol-dark); font-size: 1.35rem; line-height: 1.3; }
+    .question-ru { margin: 8px 0 0; color: var(--purple); font-size: 1.1rem; line-height: 1.45; }
+    textarea { --writing-line-height: 42px; display: block; width: 100%; min-height: 180px; resize: vertical; padding: 11px 22px 18px; border: 3px solid var(--line); border-radius: 20px; outline: none; background: linear-gradient(to bottom, transparent 0, transparent 39px, rgba(0,85,104,.17) 39px, rgba(0,85,104,.17) 40px, transparent 40px), var(--white); background-attachment: local; background-position: 0 2px; background-repeat: repeat-y; background-size: 100% var(--writing-line-height); color: var(--petrol-dark); font-size: 1.2rem; line-height: var(--writing-line-height); transition: border-color 150ms ease, box-shadow 150ms ease; }
+    textarea::placeholder { color: #6d8582; opacity: .7; }
+    textarea:focus { border-color: var(--purple); box-shadow: 0 0 0 5px rgba(146,20,111,.12); }
+
+    .navrow { display: flex; justify-content: space-between; gap: .6rem; margin-top: 1.1rem; }
+    .btn { padding: .5em 1.4em; border: 2px solid var(--petrol); border-radius: 999px; background: var(--white); color: var(--petrol); font-weight: 800; cursor: pointer; }
+    .btn:hover:not([disabled]) { background: #ddeef9; }
+    .btn:focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+    .btn.primary { border-color: var(--petrol); background: var(--petrol); color: var(--white); }
+    .btn.primary:hover:not([disabled]) { background: #01476e; }
+    .btn[disabled] { opacity: .4; cursor: default; }
+    .btn .ru { font-weight: 500; opacity: .85; }
+    .btn:not(.primary) .ru { color: var(--purple); opacity: 1; }
+
+    .done-card { padding: clamp(22px, 4vw, 34px); border: 1px solid rgba(0,85,104,.12); border-radius: 28px; background: rgba(255,255,255,.86); box-shadow: var(--shadow); }
+    .done-card[hidden] { display: none; }
+    .done-card h2 { margin: 0; color: var(--petrol-dark); font-size: 1.35rem; }
+    .done-card h2 .ru { color: var(--purple); font-weight: inherit; }
+    .done-card h2 .ru::before { content: "· "; }
+    .summary-item { margin-top: 20px; padding: 16px 19px; border-left: 5px solid var(--teal); border-radius: 14px; background: var(--white); }
+    .summary-item h3 { margin: 0; color: var(--petrol-dark); font-size: 1.05rem; }
+    .summary-item .answer { margin: 8px 0 0; color: var(--petrol-dark); font-size: 1.05rem; line-height: 1.5; white-space: pre-wrap; }
+    .summary-item .answer.empty { color: var(--purple); font-style: italic; }
+
+    .starters-card { position: sticky; top: 24px; grid-area: helpers; margin: 0; overflow: hidden; border: 2px solid rgba(146,20,111,.2); border-radius: 28px; background: var(--purple-soft); box-shadow: var(--shadow); }
+    .starters-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 28px; background: var(--purple); color: var(--white); }
+    .starters-heading h2, .starters-heading p { margin: 0; }
+    .starters-heading h2 { font-size: 1.4rem; }
+    .starters-heading p { margin-top: 4px; font-size: 1rem; }
+    .starters-heading > span { font-size: 2.2rem; }
+    .starter-grid { display: grid; grid-template-columns: 1fr; gap: 14px; padding: 24px; }
+    .starter-group[hidden] { display: none; }
+    .starter-group { display: grid; gap: 14px; }
+    .starter-item { padding: 16px 18px; border-left: 5px solid var(--teal); border-radius: 14px; background: var(--white); }
+    .starter-item p { margin: 0; color: var(--petrol-dark); font-size: 1.05rem; font-weight: 700; line-height: 1.45; }
+    .starter-item p + p { margin-top: 7px; color: var(--purple); font-weight: 500; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 900px) {
+      .work-area { grid-template-columns: 1fr; grid-template-areas: "writing" "helpers"; }
+      .starters-card { position: static; }
+    }
+    @media (max-width: 700px) {
+      .page-shell { width: min(100% - 22px, 1200px); }
+      .page-head h1 { font-size: 1.7rem; }
+      .question-heading { grid-template-columns: 42px 1fr; gap: 13px; }
+      .number-badge { width: 42px; height: 42px; font-size: 1.2rem; }
+      .starter-grid { padding: 18px; }
+      .navrow .btn { padding: .5em 1em; }
+    }
+    @media print {
+      body { background: white; }
+      .page-shell { width: 100%; padding: 0; }
+      .question-card[hidden], .starter-group[hidden] { display: block; }
+      .navrow, .pdots, .done-card { display: none; }
+      .question-card, .starters-card { margin-bottom: 16px; break-inside: avoid; box-shadow: none; }
+      .work-area { grid-template-columns: 1fr; grid-template-areas: "writing" "helpers"; }
+      .starters-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-head">
+      <span class="kicker">Station 5</span>
+      <h1>Berufe im Hafen <span class="ru" lang="ru">Профессии в порту</span></h1>
+      <p class="lead">
+        Beantworte die vier Fragen. Die Satzanfänge helfen dir beim Schreiben.
+        <span class="ru" lang="ru">Ответь на четыре вопроса. Начала предложений помогут тебе при письме.</span>
+      </p>
+    </header>
+
+    <div class="work-area">
+      <section class="writing-section" aria-label="Schreibaufgabe">
+        <div class="progress">
+          <span class="ptext" id="ptext" aria-live="polite"></span>
+          <span class="pdots" id="pdots"></span>
+        </div>
+
+        <article class="question-card" id="q1" data-step="0">
+          <div class="question-heading">
+            <span class="number-badge" aria-hidden="true">1</span>
+            <div>
+              <h2>Welchen Beruf der fünf würdest du am liebsten ausüben und warum?</h2>
+              <p class="question-ru" lang="ru">Какой профессией из этих пяти ты хотел(а) бы заниматься больше всего и почему?</p>
+            </div>
+          </div>
+          <label class="sr-only" for="liebster-beruf">Welchen Beruf der fünf würdest du am liebsten ausüben und warum?</label>
+          <textarea id="liebster-beruf" name="liebster-beruf" rows="5" placeholder="Schreibe hier deine Antwort …&#10;Напиши здесь свой ответ …"></textarea>
+        </article>
+
+        <article class="question-card" id="q2" data-step="1" hidden>
+          <div class="question-heading">
+            <span class="number-badge" aria-hidden="true">2</span>
+            <div>
+              <h2>Welchen Beruf der fünf würdest du am wenigsten gern ausüben und warum?</h2>
+              <p class="question-ru" lang="ru">Какой профессией из этих пяти ты хотел(а) бы заниматься меньше всего и почему?</p>
+            </div>
+          </div>
+          <label class="sr-only" for="unbeliebter-beruf">Welchen Beruf der fünf würdest du am wenigsten gern ausüben und warum?</label>
+          <textarea id="unbeliebter-beruf" name="unbeliebter-beruf" rows="5" placeholder="Schreibe hier deine Antwort …&#10;Напиши здесь свой ответ …"></textarea>
+        </article>
+
+        <article class="question-card" id="q3" data-step="2" hidden>
+          <div class="question-heading">
+            <span class="number-badge" aria-hidden="true">3</span>
+            <div>
+              <h2>Was würde dir im Beruf von Beatrize leicht fallen?</h2>
+              <p class="question-ru" lang="ru">Что было бы для тебя лёгким в профессии Беатризы?</p>
+            </div>
+          </div>
+          <label class="sr-only" for="beatrize-leicht">Was würde dir im Beruf von Beatrize leicht fallen?</label>
+          <textarea id="beatrize-leicht" name="beatrize-leicht" rows="5" placeholder="Schreibe hier deine Antwort …&#10;Напиши здесь свой ответ …"></textarea>
+        </article>
+
+        <article class="question-card" id="q4" data-step="3" hidden>
+          <div class="question-heading">
+            <span class="number-badge" aria-hidden="true">4</span>
+            <div>
+              <h2>Welche Herausforderungen hat der Beruf von Vesmeralda?</h2>
+              <p class="question-ru" lang="ru">Какие трудности есть в профессии Весмеральды?</p>
+            </div>
+          </div>
+          <label class="sr-only" for="vesmeralda-herausforderungen">Welche Herausforderungen hat der Beruf von Vesmeralda?</label>
+          <textarea id="vesmeralda-herausforderungen" name="vesmeralda-herausforderungen" rows="5" placeholder="Schreibe hier deine Antwort …&#10;Напиши здесь свой ответ …"></textarea>
+        </article>
+
+        <article class="done-card" id="done" data-step="4" hidden aria-live="polite">
+          <h2>Fertig! Das hast du geschrieben. <span class="ru" lang="ru">Готово! Вот что ты написал(а).</span></h2>
+          <div id="summary-list"></div>
+        </article>
+
+        <div class="navrow">
+          <button type="button" class="btn" id="back">← Zurück <span class="ru" lang="ru">назад</span></button>
+          <button type="button" class="btn primary" id="next">Weiter → <span class="ru" lang="ru">дальше</span></button>
+        </div>
+      </section>
+
+      <aside class="starters-card" id="starters" aria-labelledby="starters-title">
+        <div class="starters-heading">
+          <div>
+            <h2 id="starters-title">Satzanfänge</h2>
+            <p lang="ru">Начала предложений</p>
+          </div>
+          <span aria-hidden="true">✎</span>
+        </div>
+        <div class="starter-grid">
+          <div class="starter-group" data-step="0">
+            <div class="starter-item"><p>Am liebsten wäre ich …, weil …</p><p lang="ru">Больше всего я хотел(а) бы быть …, потому что …</p></div>
+            <div class="starter-item"><p>Der Beruf von … gefällt mir, weil …</p><p lang="ru">Профессия … мне нравится, потому что …</p></div>
+            <div class="starter-item"><p>Mir macht … Spaß. Deshalb …</p><p lang="ru">Мне нравится … Поэтому …</p></div>
+            <div class="starter-item"><p>Dieser Beruf passt zu mir, weil ich …</p><p lang="ru">Эта профессия мне подходит, потому что я …</p></div>
+          </div>
+          <div class="starter-group" data-step="1" hidden>
+            <div class="starter-item"><p>Am wenigsten gern wäre ich …, weil …</p><p lang="ru">Меньше всего я хотел(а) бы быть …, потому что …</p></div>
+            <div class="starter-item"><p>Dieser Beruf passt nicht zu mir, weil …</p><p lang="ru">Эта профессия мне не подходит, потому что …</p></div>
+            <div class="starter-item"><p>Ich finde es schwierig, dass …</p><p lang="ru">Мне кажется трудным то, что …</p></div>
+            <div class="starter-item"><p>Ich möchte nicht jeden Tag …</p><p lang="ru">Я не хотел(а) бы каждый день …</p></div>
+          </div>
+          <div class="starter-group" data-step="2" hidden>
+            <div class="starter-item"><p>Im Beruf von Beatrize würde mir … leicht fallen.</p><p lang="ru">В профессии Беатризы мне было бы легко …</p></div>
+            <div class="starter-item"><p>Das kann ich schon gut: …</p><p lang="ru">Это я уже хорошо умею: …</p></div>
+            <div class="starter-item"><p>Leicht fällt mir …, weil …</p><p lang="ru">Мне легко …, потому что …</p></div>
+            <div class="starter-item"><p>Ich habe keine Angst vor …</p><p lang="ru">Я не боюсь …</p></div>
+          </div>
+          <div class="starter-group" data-step="3" hidden>
+            <div class="starter-item"><p>Eine Herausforderung ist …</p><p lang="ru">Одна из трудностей — это …</p></div>
+            <div class="starter-item"><p>Vesmeralda muss oft …</p><p lang="ru">Весмеральде часто приходится …</p></div>
+            <div class="starter-item"><p>Dafür braucht sie …</p><p lang="ru">Для этого ей нужно …</p></div>
+            <div class="starter-item"><p>Schwierig ist es, wenn …</p><p lang="ru">Трудно, когда …</p></div>
+          </div>
+          <div class="starter-group" data-step="4" hidden>
+            <div class="starter-item"><p>Lies deine Antworten noch einmal durch.</p><p lang="ru">Перечитай свои ответы ещё раз.</p></div>
+            <div class="starter-item"><p>Mit „Zurück“ kannst du etwas verbessern.</p><p lang="ru">С помощью «назад» ты можешь что-то исправить.</p></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "hafenberufe-station5-v1";
+    const QUESTION_COUNT = 4;
+    const LAST_STEP = QUESTION_COUNT;
+
+    const cards = Array.from(document.querySelectorAll("[data-step]")).filter((el) => el.closest(".writing-section"));
+    const groups = Array.from(document.querySelectorAll(".starter-group"));
+    const fields = Array.from(document.querySelectorAll("textarea"));
+    const ptext = document.getElementById("ptext");
+    const pdots = document.getElementById("pdots");
+    const backBtn = document.getElementById("back");
+    const nextBtn = document.getElementById("next");
+    const summaryList = document.getElementById("summary-list");
+    let step = 0;
+    let saveTimer;
+
+    const dots = fields.map((field, index) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.addEventListener("click", () => goTo(index));
+      pdots.appendChild(dot);
+      return dot;
+    });
+
+    function saveAnswers() {
+      window.clearTimeout(saveTimer);
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          answers: Object.fromEntries(fields.map((field) => [field.id, field.value])),
+          updatedAt: new Date().toISOString()
+        }));
+      } catch (error) {
+        /* Speichern nicht möglich – die Aufgabe funktioniert trotzdem. */
+      }
+    }
+
+    function buildSummary() {
+      summaryList.textContent = "";
+      fields.forEach((field, index) => {
+        const card = cards[index];
+        const item = document.createElement("div");
+        item.className = "summary-item";
+        const title = document.createElement("h3");
+        title.textContent = (index + 1) + ". " + card.querySelector("h2").textContent;
+        const answer = document.createElement("p");
+        answer.className = "answer";
+        if (field.value.trim()) {
+          answer.textContent = field.value.trim();
+        } else {
+          answer.classList.add("empty");
+          answer.textContent = "Hier fehlt noch deine Antwort. · Здесь ещё нет твоего ответа.";
+        }
+        item.append(title, answer);
+        summaryList.appendChild(item);
+      });
+    }
+
+    function render() {
+      cards.forEach((card) => { card.hidden = Number(card.dataset.step) !== step; });
+      groups.forEach((group) => { group.hidden = Number(group.dataset.step) !== step; });
+
+      dots.forEach((dot, index) => {
+        const answered = fields[index].value.trim().length > 0;
+        dot.classList.toggle("filled", answered);
+        dot.classList.toggle("now", index === step);
+        dot.setAttribute("aria-label", "Frage " + (index + 1) + (answered ? " (beantwortet)" : ""));
+        dot.setAttribute("aria-current", index === step ? "step" : "false");
+      });
+
+      if (step === LAST_STEP) {
+        ptext.innerHTML = 'Alle Fragen <span class="ru" lang="ru">все вопросы</span>';
+        nextBtn.hidden = true;
+      } else {
+        ptext.innerHTML = "Frage " + (step + 1) + " von " + QUESTION_COUNT +
+          ' <span class="ru" lang="ru">Вопрос ' + (step + 1) + " из " + QUESTION_COUNT + "</span>";
+        nextBtn.hidden = false;
+        nextBtn.innerHTML = step === LAST_STEP - 1
+          ? 'Fertig ✓ <span class="ru" lang="ru">готово</span>'
+          : 'Weiter → <span class="ru" lang="ru">дальше</span>';
+      }
+      backBtn.disabled = step === 0;
+    }
+
+    function goTo(target) {
+      saveAnswers();
+      step = Math.max(0, Math.min(LAST_STEP, target));
+      if (step === LAST_STEP) { buildSummary(); }
+      render();
+      const active = cards[step];
+      if (active) { active.scrollIntoView({ block: "nearest" }); }
+      const field = fields[step];
+      if (field) { field.focus({ preventScroll: true }); }
+    }
+
+    nextBtn.addEventListener("click", () => goTo(step + 1));
+    backBtn.addEventListener("click", () => goTo(step - 1));
+
+    fields.forEach((field) => {
+      field.addEventListener("input", () => {
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(saveAnswers, 350);
+        const index = fields.indexOf(field);
+        dots[index].classList.toggle("filled", field.value.trim().length > 0);
+      });
+    });
+
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const savedData = JSON.parse(stored);
+        fields.forEach((field) => { field.value = savedData.answers?.[field.id] || ""; });
+      }
+    } catch (error) {
+      /* Gespeicherte Antworten konnten nicht gelesen werden. */
+    }
+
+    window.addEventListener("pagehide", saveAnswers);
+    render();
+  </script>
+</body>
+</html>
