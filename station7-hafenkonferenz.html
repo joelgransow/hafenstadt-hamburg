@@ -1,0 +1,1995 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Station 7: Interaktive Hafenkonferenz zu Konflikten im Hamburger Hafen.">
+  <title>Station 7 · Hafenkonferenz</title>
+  <style>
+    :root {
+      --mint: #eaf9f6;
+      --petrol: #005568;
+      --petrol-dark: #173f3d;
+      --teal: #00968e;
+      --teal-soft: #d5f5ee;
+      --purple: #92146f;
+      --purple-soft: #f8eaf4;
+      --white: #fff;
+      --line: #9ccfca;
+      --muted: #4f7574;
+      --gold: #f2b441;
+      --mara: #147da1;
+      --mara-soft: #e0f3fa;
+      --daniel: #b95119;
+      --daniel-soft: #fff0e5;
+      --aylin: #f2b441;
+      --aylin-soft: #fff5d8;
+      --thomas: #2f7d4f;
+      --thomas-soft: #e4f4e9;
+      --shadow: 0 12px 30px rgba(0, 79, 89, .10);
+      --deep-shadow: 0 18px 46px rgba(0, 57, 68, .18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--mint);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        radial-gradient(circle at 10% 3%, rgba(255, 255, 255, .78), transparent 24rem),
+        radial-gradient(circle at 94% 28%, rgba(213, 245, 238, .9), transparent 22rem),
+        var(--mint);
+      color: var(--petrol-dark);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, textarea { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+
+    button:focus-visible,
+    a:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--teal);
+      outline-offset: 3px;
+    }
+
+    [hidden] { display: none !important; }
+
+    .page-shell {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 72px;
+    }
+
+    .page-head { margin-bottom: 24px; }
+
+    .kicker {
+      display: inline-block;
+      margin-bottom: .65rem;
+      padding: .22em .9em;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: .86rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .page-head h1 {
+      margin: 0;
+      color: var(--petrol-dark);
+      font-size: clamp(1.8rem, 4vw, 2.65rem);
+      line-height: 1.16;
+      letter-spacing: -.02em;
+    }
+
+    .page-head h1 .ru {
+      color: var(--purple);
+      font-size: .82em;
+    }
+
+    .page-head h1 .ru::before { content: "· "; }
+
+    .briefing {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: clamp(20px, 3vw, 28px);
+      border: 1px solid rgba(0, 85, 104, .12);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, .9);
+      box-shadow: var(--shadow);
+    }
+
+    .briefing h2 {
+      margin: 0 0 8px;
+      color: var(--petrol);
+      font-size: clamp(1.25rem, 3vw, 1.55rem);
+    }
+
+    .briefing p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--petrol-dark);
+      line-height: 1.55;
+    }
+
+    .briefing .ru {
+      display: block;
+      margin-top: 5px;
+      color: var(--purple);
+      font-size: .96rem;
+    }
+
+    .briefing-icon {
+      display: grid;
+      width: 68px;
+      height: 68px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal-soft);
+      color: var(--petrol);
+      font-size: 2rem;
+    }
+
+    .conference-status {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 16px 20px;
+      border-radius: 18px;
+      background: var(--petrol);
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .status-label {
+      margin: 0 0 8px;
+      font-size: .92rem;
+      font-weight: 800;
+    }
+
+    .status-dots {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: .42em .72em;
+      border: 1px solid rgba(255,255,255,.38);
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      color: var(--white);
+      font-size: .83rem;
+      font-weight: 700;
+    }
+
+    .status-dot::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.5);
+    }
+
+    .status-dot.visited {
+      background: var(--white);
+      color: var(--petrol-dark);
+    }
+
+    .status-dot.visited::before { background: var(--teal); }
+
+    .status-count {
+      min-width: 74px;
+      text-align: right;
+      font-size: 1.45rem;
+      font-weight: 900;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .flip-card {
+      min-width: 0;
+      height: 600px;
+      perspective: 1600px;
+      scroll-margin-top: 18px;
+    }
+
+    .card-inner {
+      position: relative;
+      display: grid;
+      width: 100%;
+      height: auto;
+      min-height: 660px;
+      transform-style: preserve-3d;
+      transition: transform .62s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .flip-card.is-flipped .card-inner { transform: rotateY(180deg); }
+
+    .card-face {
+      position: relative;
+      grid-area: 1 / 1;
+      min-height: 660px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 85, 104, .14);
+      border-radius: 28px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .card-front {
+      width: 100%;
+      padding: 0;
+      border: 0;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      visibility: visible;
+    }
+
+    .card-back { visibility: hidden; }
+    .flip-card.is-flipped .card-front { visibility: hidden; }
+    .flip-card.is-flipped .card-back { visibility: visible; }
+
+    .card-front:hover .portrait { transform: scale(1.025); }
+
+    .portrait-wrap {
+      position: relative;
+      height: 67%;
+      overflow: hidden;
+      background: var(--petrol-dark);
+    }
+
+    .portrait {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      transition: transform .35s ease;
+    }
+
+    .portrait-wrap::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 34%;
+      background: linear-gradient(transparent, rgba(0, 44, 53, .72));
+      pointer-events: none;
+    }
+
+    .visited-badge {
+      position: absolute;
+      z-index: 1;
+      top: 16px;
+      right: 16px;
+      display: none;
+      padding: .42em .75em;
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--teal);
+      font-size: .8rem;
+      font-weight: 900;
+      box-shadow: 0 5px 16px rgba(0,0,0,.15);
+    }
+
+    .flip-card.visited .visited-badge { display: block; }
+
+    .front-copy {
+      display: flex;
+      height: 33%;
+      flex-direction: column;
+      justify-content: center;
+      padding: 21px 24px 23px;
+      background: var(--white);
+    }
+
+    .role-label {
+      margin: 0 0 5px;
+      color: var(--teal);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+
+    .front-copy h2 {
+      margin: 0;
+      color: var(--petrol-dark);
+      font-size: clamp(1.25rem, 2.6vw, 1.62rem);
+    }
+
+    .opening-line {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: .97rem;
+      line-height: 1.38;
+    }
+
+    .flip-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 10px;
+      color: var(--teal);
+      font-size: .87rem;
+      font-weight: 900;
+    }
+
+    .card-back {
+      display: flex;
+      flex-direction: column;
+      padding: 23px;
+      transform: rotateY(180deg);
+      background:
+        linear-gradient(145deg, rgba(213,245,238,.7), transparent 44%),
+        var(--white);
+    }
+
+    .back-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      margin-bottom: 13px;
+    }
+
+    .back-head h2 {
+      margin: 2px 0 0;
+      color: var(--petrol-dark);
+      font-size: 1.35rem;
+    }
+
+    .back-head .role-label { margin-bottom: 2px; }
+
+    .close-card {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 2px solid var(--petrol);
+      border-radius: 50%;
+      background: var(--white);
+      color: var(--petrol);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .back-scroll {
+      min-height: 0;
+      overflow: visible;
+      padding-right: 0;
+    }
+
+    .evidence {
+      margin-bottom: 12px;
+      padding: 15px 16px;
+      border-left: 5px solid var(--teal);
+      border-radius: 14px;
+      background: var(--mint);
+    }
+
+    .evidence.alt {
+      border-left-color: var(--petrol);
+      background: var(--teal-soft);
+    }
+
+    .evidence-tag {
+      margin: 0 0 6px;
+      color: var(--teal);
+      font-size: .74rem;
+      font-weight: 900;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .evidence.alt .evidence-tag { color: var(--petrol); }
+
+    .evidence p {
+      margin: 0;
+      color: var(--petrol-dark);
+      font-size: .96rem;
+      line-height: 1.48;
+    }
+
+    .source-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: .28em;
+      padding: .14em .5em;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--petrol);
+      font-size: .76rem;
+      font-weight: 900;
+      vertical-align: .1em;
+      cursor: pointer;
+    }
+
+    .source-button:hover { background: var(--teal-soft); }
+
+    .media-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 11px;
+    }
+
+    .media-button {
+      padding: .48em .75em;
+      border: 2px solid var(--petrol);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--petrol);
+      font-size: .82rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .connections {
+      padding-top: 2px;
+    }
+
+    .connections h3 {
+      margin: 0 0 8px;
+      color: var(--petrol-dark);
+      font-size: .94rem;
+    }
+
+    .connection-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .connection-button {
+      flex: 1 1 145px;
+      min-height: 44px;
+      padding: .55em .72em;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: var(--white);
+      color: var(--petrol-dark);
+      font-size: .82rem;
+      font-weight: 800;
+      line-height: 1.25;
+      cursor: pointer;
+    }
+
+    .connection-button:hover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    /* Phase 1: Die Personen werden bewusst nacheinander vorgestellt. */
+    .card-grid {
+      grid-template-columns: minmax(0, 730px);
+      justify-content: center;
+    }
+
+    .card-grid .flip-card { display: none; height: auto; min-height: 660px; }
+    .card-grid .flip-card.intro-active { display: block; }
+
+    .card-grid .card-front {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-grid .portrait-wrap {
+      flex: 1 1 auto;
+      flex-basis: 440px;
+      height: 440px;
+      min-height: 0;
+    }
+
+    .card-grid .front-copy {
+      flex: 0 0 auto;
+      height: auto;
+      min-height: 220px;
+      padding: 18px 22px 20px;
+    }
+
+    .card-grid .card-back { padding: 20px; }
+    .card-grid .back-head { margin-bottom: 10px; }
+    .card-grid .evidence,
+    .card-grid .position-summary { margin-bottom: 10px; padding: 13px 14px; }
+
+    .position-summary {
+      margin: 0 0 12px;
+      padding: 15px 16px;
+      border: 2px solid rgba(0, 85, 104, .13);
+      border-radius: 14px;
+      background: var(--white);
+    }
+
+    .position-summary h3 {
+      margin: 0 0 6px;
+      color: var(--petrol);
+      font-size: .96rem;
+    }
+
+    .position-summary p {
+      margin: 0;
+      color: var(--petrol-dark);
+      font-size: .95rem;
+      line-height: 1.48;
+    }
+
+    .intro-next-row {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 3px;
+    }
+
+    .intro-next {
+      padding: .65em 1em;
+      border: 2px solid var(--petrol);
+      border-radius: 999px;
+      background: var(--petrol);
+      color: var(--white);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .intro-next:hover { background: #014752; }
+
+    .conference-view {
+      margin-top: 26px;
+      padding: clamp(22px, 4vw, 34px);
+      border: 1px solid rgba(0, 85, 104, .12);
+      border-radius: 28px;
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--deep-shadow);
+      scroll-margin-top: 18px;
+    }
+
+    .conference-view > h2 {
+      margin: 0;
+      color: var(--petrol-dark);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+    }
+
+    .conference-intro {
+      max-width: 780px;
+      margin: 8px 0 22px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .color-help {
+      margin: -10px 0 13px;
+      color: var(--petrol-dark);
+      font-size: .92rem;
+      font-weight: 800;
+    }
+
+    .speaker-switch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .speaker-switch button {
+      padding: .48em .78em;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--petrol-dark);
+      font-size: .84rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .speaker-switch button[aria-pressed="true"] {
+      border-color: var(--teal);
+      background: var(--teal);
+      color: var(--white);
+    }
+
+    .speaker-switch button[data-person="nature"] { border-color: var(--mara); background: var(--mara-soft); }
+    .speaker-switch button[data-person="shipping"] { border-color: var(--daniel); background: var(--daniel-soft); }
+    .speaker-switch button[data-person="work"] { border-color: var(--aylin); background: var(--aylin-soft); }
+    .speaker-switch button[data-person="residents"] { border-color: var(--thomas); background: var(--thomas-soft); }
+    .speaker-switch button[data-person="nature"][aria-pressed="true"] { background: var(--mara); color: var(--white); }
+    .speaker-switch button[data-person="shipping"][aria-pressed="true"] { background: var(--daniel); color: var(--white); }
+    .speaker-switch button[data-person="work"][aria-pressed="true"] { background: var(--aylin); color: var(--petrol-dark); }
+    .speaker-switch button[data-person="residents"][aria-pressed="true"] { background: var(--thomas); color: var(--white); }
+
+    .conference-speaker {
+      display: grid;
+      grid-template-columns: 108px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      border-radius: 20px;
+      background: var(--mint);
+    }
+
+    .conference-view[data-speaker="nature"] .conference-speaker { border-left: 8px solid var(--mara); background: var(--mara-soft); }
+    .conference-view[data-speaker="shipping"] .conference-speaker { border-left: 8px solid var(--daniel); background: var(--daniel-soft); }
+    .conference-view[data-speaker="work"] .conference-speaker { border-left: 8px solid var(--aylin); background: var(--aylin-soft); }
+    .conference-view[data-speaker="residents"] .conference-speaker { border-left: 8px solid var(--thomas); background: var(--thomas-soft); }
+
+    .conference-speaker img {
+      width: 108px;
+      height: 108px;
+      object-fit: cover;
+      object-position: center 18%;
+      border: 4px solid var(--white);
+      border-radius: 50%;
+      box-shadow: 0 7px 18px rgba(0,79,89,.16);
+    }
+
+    .conference-speaker h3 {
+      margin: 2px 0 5px;
+      color: var(--petrol-dark);
+      font-size: 1.3rem;
+    }
+
+    .conference-speaker p:last-child {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .question-panel {
+      margin-top: 18px;
+      padding: 18px;
+      border: 2px solid var(--teal-soft);
+      border-radius: 20px;
+      background: var(--white);
+    }
+
+    .question-panel h3 {
+      margin: 0 0 12px;
+      color: var(--petrol-dark);
+      font-size: 1.05rem;
+    }
+
+    .question-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .question-choice {
+      min-height: 82px;
+      padding: 12px;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--mint);
+      color: var(--petrol-dark);
+      text-align: left;
+      font-weight: 800;
+      line-height: 1.35;
+      cursor: pointer;
+    }
+
+    .question-choice:hover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+
+    .conference-view[data-speaker="nature"] .question-choice { border-left: 8px solid var(--mara); background: var(--mara-soft); }
+    .conference-view[data-speaker="shipping"] .question-choice { border-left: 8px solid var(--daniel); background: var(--daniel-soft); }
+    .conference-view[data-speaker="work"] .question-choice { border-left: 8px solid var(--aylin); background: var(--aylin-soft); }
+    .conference-view[data-speaker="residents"] .question-choice { border-left: 8px solid var(--thomas); background: var(--thomas-soft); }
+
+    .conversation-history {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .exchange {
+      overflow: hidden;
+      border: 1px solid rgba(0,85,104,.14);
+      border-radius: 20px;
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .question-bubble {
+      padding: 14px 18px;
+      background: var(--petrol);
+      color: var(--white);
+      line-height: 1.45;
+    }
+
+    .exchange[data-asker="nature"] .question-bubble { background: var(--mara); }
+    .exchange[data-asker="shipping"] .question-bubble { background: var(--daniel); }
+    .exchange[data-asker="work"] .question-bubble { background: var(--aylin); color: var(--petrol-dark); }
+    .exchange[data-asker="residents"] .question-bubble { background: var(--thomas); }
+
+    .question-bubble small {
+      display: block;
+      margin-bottom: 3px;
+      opacity: .78;
+      font-weight: 700;
+    }
+
+    .answer-row {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 15px;
+      padding: 18px;
+    }
+
+    .answer-row img {
+      width: 86px;
+      height: 86px;
+      object-fit: cover;
+      object-position: center 18%;
+      border-radius: 50%;
+    }
+
+    .answer-row h3 {
+      margin: 1px 0 7px;
+      color: var(--petrol-dark);
+      font-size: 1.15rem;
+    }
+
+    .answer-position {
+      margin: 0 0 12px !important;
+      padding: 10px 12px;
+      border-radius: 11px;
+      background: var(--teal-soft);
+      color: var(--petrol) !important;
+      font-weight: 700;
+    }
+
+    .answer-copy p {
+      margin: 0 0 8px;
+      color: var(--petrol-dark);
+      line-height: 1.5;
+    }
+
+    .continue-talk {
+      margin-top: 4px;
+      padding: .5em .78em;
+      border: 2px solid var(--petrol);
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--petrol);
+      font-size: .84rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .history-empty {
+      margin: 0;
+      padding: 15px;
+      border-radius: 14px;
+      background: var(--teal-soft);
+      color: var(--muted);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .decision-gate {
+      margin-top: 28px;
+      padding: clamp(22px, 4vw, 34px);
+      border: 2px dashed var(--line);
+      border-radius: 28px;
+      background: rgba(255,255,255,.7);
+      text-align: center;
+    }
+
+    .decision-gate.ready {
+      border-style: solid;
+      border-color: var(--teal);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .decision-gate h2 {
+      margin: 0;
+      color: var(--petrol-dark);
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+    }
+
+    .decision-gate p {
+      margin: 8px auto 17px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .btn {
+      padding: .68em 1.2em;
+      border: 2px solid var(--petrol);
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--petrol);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: #ddeef9; }
+    .btn.primary { background: var(--petrol); color: var(--white); }
+    .btn.primary:hover { background: #014752; }
+    .btn:disabled { cursor: not-allowed; opacity: .48; }
+
+    .opinion-view {
+      margin-top: 28px;
+      scroll-margin-top: 18px;
+    }
+
+    .opinion-card,
+    .result-card {
+      padding: clamp(22px, 4vw, 36px);
+      border: 1px solid rgba(0, 85, 104, .12);
+      border-radius: 28px;
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--deep-shadow);
+    }
+
+    .opinion-card h2,
+    .result-card h2 {
+      margin: 0;
+      color: var(--petrol-dark);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+    }
+
+    .section-ru {
+      margin: 5px 0 20px;
+      color: var(--purple);
+      font-size: 1rem;
+    }
+
+    .starter-label {
+      margin: 0 0 9px;
+      color: var(--petrol-dark);
+      font-weight: 900;
+    }
+
+    .starter-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .starter {
+      padding: 12px 14px;
+      border: 2px solid var(--teal-soft);
+      border-radius: 14px;
+      background: var(--mint);
+      color: var(--petrol-dark);
+      text-align: left;
+      font-weight: 800;
+      line-height: 1.35;
+      cursor: pointer;
+    }
+
+    .starter:hover { border-color: var(--teal); }
+
+    .starter .ru {
+      display: block;
+      margin-top: 5px;
+      color: var(--purple);
+      font-size: .88rem;
+      font-weight: 500;
+    }
+
+    .response-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--petrol-dark);
+      font-weight: 900;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      padding: 16px;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      background: var(--white);
+      color: var(--petrol-dark);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    textarea:focus { border-color: var(--teal); }
+
+    .response-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 13px;
+    }
+
+    .char-count {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 800;
+    }
+
+    .form-message {
+      min-height: 1.3em;
+      margin: 10px 0 0;
+      color: var(--petrol);
+      font-weight: 800;
+    }
+
+    .result-mark {
+      display: grid;
+      width: 72px;
+      height: 72px;
+      margin-bottom: 17px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: var(--white);
+      font-size: 2rem;
+      font-weight: 900;
+    }
+
+    .result-intro {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .result-answer {
+      margin: 20px 0;
+      padding: 20px;
+      border-left: 6px solid var(--teal);
+      border-radius: 14px;
+      background: var(--teal-soft);
+      color: var(--petrol-dark);
+      font-size: 1.05rem;
+      line-height: 1.58;
+      white-space: pre-wrap;
+    }
+
+    .result-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    dialog {
+      width: min(520px, calc(100% - 28px));
+      padding: 0;
+      border: 0;
+      border-radius: 22px;
+      color: var(--petrol-dark);
+      box-shadow: 0 24px 70px rgba(0, 35, 43, .35);
+    }
+
+    dialog::backdrop { background: rgba(0, 44, 53, .62); }
+
+    .source-dialog-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 18px 20px;
+      background: var(--petrol);
+      color: var(--white);
+    }
+
+    .source-dialog-head h2 { margin: 0; font-size: 1.25rem; }
+
+    .dialog-close {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.65);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--white);
+      font-size: 1.15rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .source-dialog-body { padding: 22px; }
+
+    .source-link {
+      display: block;
+      padding: 14px 16px;
+      border: 2px solid var(--teal);
+      border-radius: 14px;
+      background: var(--mint);
+      color: var(--petrol);
+      font-weight: 900;
+      line-height: 1.4;
+      text-decoration: none;
+    }
+
+    .source-link:hover { background: var(--teal-soft); }
+
+    .source-meta {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.55;
+    }
+
+    .source-note {
+      margin: 13px 0 0;
+      padding: 11px 13px;
+      border-radius: 12px;
+      background: #fff4d9;
+      color: #674b11;
+      font-size: .9rem;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 820px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .flip-card { height: 680px; }
+      .starter-list { grid-template-columns: 1fr; }
+      .question-list { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .page-shell { width: min(100% - 22px, 1200px); padding-top: 20px; }
+      .page-head h1 .ru { display: block; margin-top: 5px; }
+      .page-head h1 .ru::before { content: ""; }
+      .briefing { grid-template-columns: 1fr; }
+      .briefing-icon { display: none; }
+      .conference-status { grid-template-columns: 1fr; }
+      .status-count { text-align: left; }
+      .flip-card { height: 720px; }
+      .card-face { border-radius: 22px; }
+      .card-grid .portrait-wrap { flex-basis: 365px; height: 365px; min-height: 0; }
+      .card-grid .front-copy { height: auto; min-height: 215px; padding: 17px; }
+      .card-back { padding: 18px; }
+      .opinion-card, .result-card { padding: 21px 17px; border-radius: 22px; }
+      .response-footer { align-items: stretch; }
+      .response-footer .btn { width: 100%; }
+      .conference-view { padding: 20px 14px; border-radius: 22px; }
+      .conference-speaker { grid-template-columns: 78px minmax(0,1fr); padding: 14px; }
+      .conference-speaker img { width: 78px; height: 78px; }
+      .answer-row { grid-template-columns: 64px minmax(0,1fr); padding: 15px; }
+      .answer-row img { width: 64px; height: 64px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+
+    @media print {
+      body { background: var(--white); }
+      .page-shell { width: 100%; padding: 0; }
+      .briefing, .conference-status, .card-grid, .decision-gate, .opinion-card, dialog { display: none; }
+      .result-card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-head">
+      <span class="kicker">Station 7</span>
+      <h1>Hafenkonferenz <span class="ru" lang="ru">Конференция о порте</span></h1>
+    </header>
+
+    <section class="briefing" aria-labelledby="briefing-title">
+      <div>
+        <h2 id="briefing-title">Vier Stimmen – viele Interessen</h2>
+        <p>
+          Lerne zuerst alle vier Personen nacheinander kennen und lies ihre Meinungen und Haltungen. Danach beginnt die Konferenz: Klicke Fragen an und beobachte, wie die Personen direkt aufeinander antworten.
+          <span class="ru" lang="ru">Сначала познакомься по очереди со всеми четырьмя участниками. Затем задавай вопросы и наблюдай, как они отвечают друг другу.</span>
+        </p>
+      </div>
+      <span class="briefing-icon" aria-hidden="true">⚓</span>
+    </section>
+
+    <section class="conference-status" aria-label="Gelesene Perspektiven">
+      <div>
+        <p class="status-label">Diese Positionen hast du bereits gelesen:</p>
+        <div class="status-dots" id="status-dots">
+          <span class="status-dot" data-dot="nature">Naturschutz</span>
+          <span class="status-dot" data-dot="shipping">Reederei</span>
+          <span class="status-dot" data-dot="work">Hafenarbeit</span>
+          <span class="status-dot" data-dot="residents">Anwohner*innen</span>
+        </div>
+      </div>
+      <div class="status-count" id="status-count" aria-live="polite">0 / 4</div>
+    </section>
+
+    <section class="card-grid" aria-label="Personenkarten der Hafenkonferenz">
+      <article class="flip-card intro-active" id="card-nature" data-role="nature">
+        <div class="card-inner">
+          <button class="card-face card-front" type="button" aria-label="Meinungen und Haltungen der Naturschützerin öffnen" aria-expanded="false">
+            <div class="portrait-wrap">
+              <img class="portrait" src="station7-figuren/naturschuetzerin-v2.png" alt="Illustrierte Naturschützerin mit Fernglas">
+              <span class="visited-badge">✓ gelesen</span>
+            </div>
+            <div class="front-copy">
+              <p class="role-label">Naturschutz</p>
+              <h2>Mara Petersen</h2>
+              <p class="opening-line">„Saubere Luft und die Gesundheit der Menschen müssen bei Entscheidungen über den Hafen mitgedacht werden.“</p>
+              <span class="flip-hint">Karte umdrehen ↻</span>
+            </div>
+          </button>
+          <section class="card-face card-back" aria-label="Meinungen und Haltungen der Naturschützerin" aria-hidden="true" inert>
+            <div class="back-head">
+              <div><p class="role-label">Naturschutz</p><h2>Maras Meinung und Haltung</h2></div>
+              <button class="close-card" type="button" aria-label="Karte wieder umdrehen">↻</button>
+            </div>
+            <div class="back-scroll">
+              <div class="position-summary">
+                <h3>Was ist der NABU?</h3>
+                <p>Für meine Meinung nutze ich Informationen des NABU. Die Abkürzung steht für „Naturschutzbund Deutschland“. Der NABU ist ein Naturschutzverband und setzt sich für Natur und Umwelt ein. <button class="source-button" type="button" data-source="nabu">Quelle ↗</button></p>
+              </div>
+              <div class="evidence">
+                <p class="evidence-tag">Meine Sorge: sehr kleine Teilchen in der Luft</p>
+                <p>Partikel sind winzig kleine Teilchen in der Luft. Während der Einlaufparade zum Hamburger Hafengeburtstag wurden 230.000 Partikel in einem Kubikzentimeter Luft gemessen. <button class="source-button" type="button" data-source="nabu">Quelle ↗</button> Der NABU nennt rund 2.500 Partikel vergleichsweise akzeptabel. Für mich zeigt dieser große Unterschied: Wir müssen die Abgase von Schiffen ernst nehmen. <button class="source-button" type="button" data-source="nabu">Quelle ↗</button></p>
+                <div class="media-row">
+                  <button class="media-button" type="button" data-source="nabu-video">▶ NABU-Video</button>
+                  <button class="media-button" type="button" data-source="nabu-map">⌖ Messorte auf der Karte</button>
+                </div>
+              </div>
+              <div class="evidence alt">
+                <p class="evidence-tag">Ich schaue auch auf eine andere Messung</p>
+                <p>Ein Grenzwert legt fest, wie hoch die Menge eines Schadstoffs höchstens sein darf. Eine amtliche Untersuchung für 2012 und 2013 stellte an ihren Messorten keine Überschreitung dieser Grenzwerte fest. <button class="source-button" type="button" data-source="air-report">Quelle ↗</button> An einzelnen Tagen war die Belastung am Elbhang trotzdem höher, wenn der Wind aus dem Hafen kam. Welche einzelne Quelle wie viel dazu beitrug, konnte nicht bestimmt werden. <button class="source-button" type="button" data-source="air-report">Quelle ↗</button></p>
+              </div>
+              <div class="position-summary">
+                <h3>Maras Position</h3>
+                <p>Ich möchte, dass Schiffe weniger schädliche Abgase ausstoßen. Der NABU fordert dafür Filter an Schiffen und den Verzicht auf Schweröl als Treibstoff. <button class="source-button" type="button" data-source="nabu">Quelle ↗</button> Für mich müssen der Schutz der Menschen, der Natur und des Klimas bei jeder Hafenentscheidung mitgedacht werden.</p>
+              </div>
+              <div class="intro-next-row"><button class="intro-next" type="button" data-next-role="shipping">Nächste Person kennenlernen →</button></div>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <article class="flip-card" id="card-shipping" data-role="shipping">
+        <div class="card-inner">
+          <button class="card-face card-front" type="button" aria-label="Meinungen und Haltungen des Reedereivertreters öffnen" aria-expanded="false">
+            <div class="portrait-wrap">
+              <img class="portrait" src="station7-figuren/reederei-vertreter.png" alt="Illustrierter Vertreter einer Reederei vor einem Containerschiff">
+              <span class="visited-badge">✓ gelesen</span>
+            </div>
+            <div class="front-copy">
+              <p class="role-label">Reederei &amp; Hafenwirtschaft</p>
+              <h2>Daniel Okafor</h2>
+              <p class="opening-line">„Der Hafen soll leistungsfähig bleiben. Umweltregeln müssen im Betrieb aber auch umsetzbar sein.“</p>
+              <span class="flip-hint">Karte umdrehen ↻</span>
+            </div>
+          </button>
+          <section class="card-face card-back" aria-label="Meinungen und Haltungen des Reedereivertreters" aria-hidden="true" inert>
+            <div class="back-head">
+              <div><p class="role-label">Reederei &amp; Hafenwirtschaft</p><h2>Daniels Meinung und Haltung</h2></div>
+              <button class="close-card" type="button" aria-label="Karte wieder umdrehen">↻</button>
+            </div>
+            <div class="back-scroll">
+              <div class="position-summary">
+                <h3>Was macht eine Reederei?</h3>
+                <p>Ich vertrete in dieser Konferenz die Reedereien. Das sind Unternehmen, die mit Schiffen Waren transportieren. Mir ist wichtig, dass der Hamburger Hafen für Schiffe gut erreichbar und zuverlässig bleibt.</p>
+              </div>
+              <div class="evidence">
+                <p class="evidence-tag">Meine Sorge: andere Häfen sind ebenfalls attraktiv</p>
+                <p>Im Hafen werden Waren von Schiffen abgeladen, auf andere Verkehrsmittel verteilt oder auf Schiffe geladen. Dieser Güterumschlag ist wichtig für die Versorgung Deutschlands und benachbarter Länder. <button class="source-button" type="button" data-source="ndr-port-supply">Quelle ↗</button></p>
+                <p style="margin-top:9px">Hamburg steht dabei im Wettbewerb mit den Häfen Rotterdam (Niederlande) und Antwerpen (Belgien). Außerdem hat die Reederei Hapag-Lloyd auch in Wilhelmshaven investiert. Für mich bedeutet das: Hamburg darf für Reedereien nicht unattraktiv werden. <button class="source-button" type="button" data-source="ndr-port-competition">Quelle ↗</button></p>
+              </div>
+              <div class="evidence alt">
+                <p class="evidence-tag">Umweltregeln gehören dazu</p>
+                <p>„MARPOL“ ist der Name für internationale Regeln, die eine Verschmutzung des Meeres durch Schiffe verhindern sollen. Bei einer MARPOL-Kontrolle im Hamburger Hafen wurde geprüft, ob Projekte der Europäischen Union zum Umweltschutz richtig umgesetzt wurden. <button class="source-button" type="button" data-source="marpol">Quelle ↗</button> Ich finde: Solche Regeln und Kontrollen müssen so gestaltet sein, dass sie die Umwelt schützen und im Hafen gut umgesetzt werden können.</p>
+              </div>
+              <div class="position-summary">
+                <h3>Daniels Position</h3>
+                <p>Bei der Elbvertiefung wurde die Fahrrinne der Elbe tiefer und breiter gemacht, damit größere Schiffe Hamburg erreichen können. Es ist umstritten, welchen Nutzen und welche Kosten dieser Eingriff hatte. <button class="source-button" type="button" data-source="ndr-port-overview">Quelle ↗</button> Ich möchte deshalb Versorgung, Wettbewerb, Kosten und Umweltregeln gemeinsam betrachten.</p>
+              </div>
+              <div class="intro-next-row"><button class="intro-next" type="button" data-next-role="work">Nächste Person kennenlernen →</button></div>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <article class="flip-card" id="card-work" data-role="work">
+        <div class="card-inner">
+          <button class="card-face card-front" type="button" aria-label="Meinungen und Haltungen der Hafenarbeiterin öffnen" aria-expanded="false">
+            <div class="portrait-wrap">
+              <img class="portrait" src="station7-figuren/hafenarbeiterin.png" alt="Illustrierte Hafenarbeiterin mit Schutzhelm">
+              <span class="visited-badge">✓ gelesen</span>
+            </div>
+            <div class="front-copy">
+              <p class="role-label">Hafenarbeit</p>
+              <h2>Aylin Yılmaz</h2>
+              <p class="opening-line">„Neue Technik kann helfen. Gute Arbeitsplätze und Schutz vor Arbeitsplatzverlust dürfen dabei nicht verloren gehen.“</p>
+              <span class="flip-hint">Karte umdrehen ↻</span>
+            </div>
+          </button>
+          <section class="card-face card-back" aria-label="Meinungen und Haltungen der Hafenarbeiterin" aria-hidden="true" inert>
+            <div class="back-head">
+              <div><p class="role-label">Hafenarbeit</p><h2>Aylins Meinung und Haltung</h2></div>
+              <button class="close-card" type="button" aria-label="Karte wieder umdrehen">↻</button>
+            </div>
+            <div class="back-scroll">
+              <div class="position-summary">
+                <h3>Was ist ver.di?</h3>
+                <p>Für meine Meinung nutze ich Aussagen von ver.di. ver.di ist eine Gewerkschaft. Eine Gewerkschaft vertritt die Interessen von Arbeitnehmer*innen, also von Menschen, die für einen Betrieb arbeiten. ver.di setzt sich hier für faire und zukunftsfähige Arbeit im Hafen ein. <button class="source-button" type="button" data-source="verdi">Quelle ↗</button></p>
+              </div>
+              <div class="evidence">
+                <p class="evidence-tag">Meine Arbeit ist wichtig für die Versorgung</p>
+                <p>Mehr als neun von zehn Waren, die weltweit gehandelt werden, werden über das Wasser transportiert. Auch ungefähr jede vierte Ware, die nach Deutschland kommt oder Deutschland verlässt, wird mit dem Schiff befördert. <button class="source-button" type="button" data-source="verdi">Quelle ↗</button> Ohne Seeleute und Hafenarbeiter*innen funktioniert diese Arbeit nicht. <button class="source-button" type="button" data-source="verdi">Quelle ↗</button></p>
+              </div>
+              <div class="evidence alt">
+                <p class="evidence-tag">Neue Technik: Chance und Risiko</p>
+                <p>Automatisierung bedeutet, dass Maschinen oder Computer Aufgaben übernehmen. Dadurch kann körperliche Arbeit zurückgehen. Gleichzeitig können neue Berufe entstehen, zum Beispiel Hafentechniker*in oder Hafenadministrator*in. <button class="source-button" type="button" data-source="welt-work">Quelle ↗</button> Ich sehe darin Chancen, will aber einen verlässlichen Schutz vor dem Verlust von Arbeitsplätzen. <button class="source-button" type="button" data-source="verdi">Quelle ↗</button></p>
+              </div>
+              <div class="position-summary">
+                <h3>Aylins Position</h3>
+                <p>Ich bin nicht gegen neue Technik. Aber die Beschäftigten müssen lernen können, mit ihr zu arbeiten. Ich möchte, dass neue Technik mit Schutz vor Arbeitsplatzverlust sowie mit guten Löhnen und Arbeitsbedingungen verbunden wird. <button class="source-button" type="button" data-source="verdi">Quelle ↗</button></p>
+              </div>
+              <div class="intro-next-row"><button class="intro-next" type="button" data-next-role="residents">Nächste Person kennenlernen →</button></div>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <article class="flip-card" id="card-residents" data-role="residents">
+        <div class="card-inner">
+          <button class="card-face card-front" type="button" aria-label="Meinungen und Haltungen des Anwohners öffnen" aria-expanded="false">
+            <div class="portrait-wrap">
+              <img class="portrait" src="station7-figuren/anwohner.png" alt="Illustrierter Anwohner vor Hamburger Häusern und Hafenkränen">
+              <span class="visited-badge">✓ gelesen</span>
+            </div>
+            <div class="front-copy">
+              <p class="role-label">Anwohner*innen</p>
+              <h2>Thomas Becker</h2>
+              <p class="opening-line">„Der Hafen ist ein Teil Hamburgs. Trotzdem brauchen Menschen in seiner Nähe Ruhe, Sicherheit und eine lebenswerte Umgebung.“</p>
+              <span class="flip-hint">Karte umdrehen ↻</span>
+            </div>
+          </button>
+          <section class="card-face card-back" aria-label="Meinungen und Haltungen des Anwohners" aria-hidden="true" inert>
+            <div class="back-head">
+              <div><p class="role-label">Anwohner*innen</p><h2>Thomas’ Meinung und Haltung</h2></div>
+              <button class="close-card" type="button" aria-label="Karte wieder umdrehen">↻</button>
+            </div>
+            <div class="back-scroll">
+              <div class="evidence">
+                <p class="evidence-tag">Meine Sorge: Lärm direkt vor der Haustür</p>
+                <p>In unserem Viertel ist der Lärm durch Tourismus und große Veranstaltungen stärker geworden. Manche Besucher*innen gehen außerdem nicht respektvoll mit den Menschen um, die dort wohnen. <button class="source-button" type="button" data-source="ndr-noise">Quelle ↗</button></p>
+                <p style="margin-top:9px">Zu den großen Veranstaltungen in Hafennähe gehören zum Beispiel der Hafengeburtstag, der Schlagermove und die Cruise Days. Ich freue mich über ein lebendiges Hamburg, brauche nachts aber auch Ruhe. <button class="source-button" type="button" data-source="ndr-noise-events">Quelle ↗</button></p>
+              </div>
+              <div class="evidence alt">
+                <p class="evidence-tag">Nicht nur Stadtbewohner*innen sind betroffen</p>
+                <p>Auch Menschen weiter elbabwärts machen sich wegen der Elbvertiefung Sorgen. Sie fürchten Folgen für Deiche, Fische, Apfelhöfe, Arbeitsplätze und ihre gesamte Lebensgrundlage. <button class="source-button" type="button" data-source="wwf">Quelle ↗</button></p>
+                <p style="margin-top:9px">Ich bin außerdem nicht überzeugt, dass ohne eine weitere Elbvertiefung nachweislich Hafenarbeitsplätze verloren gehen. Für mich zeigt das: Bei einer Entscheidung müssen verschiedene Arten von Arbeitsplätzen und Lebensräumen betrachtet werden. <button class="source-button" type="button" data-source="wwf">Quelle ↗</button></p>
+              </div>
+              <div class="position-summary">
+                <h3>Thomas’ Position</h3>
+                <p>Ich weiß, dass Tourismus der Stadt wirtschaftliche Vorteile bringt. Trotzdem sollen auch die Menschen, die hier wohnen, ihre Stadt genießen können. <button class="source-button" type="button" data-source="ndr-noise-tourism">Quelle ↗</button> Deshalb wünsche ich mir Lösungen, die ein lebendiges Hafenleben und eine gute Lebensqualität miteinander verbinden.</p>
+              </div>
+              <div class="intro-next-row"><button class="intro-next" type="button" data-finish-intro="true">Alle gelesen – Konferenz starten →</button></div>
+            </div>
+          </section>
+        </div>
+      </article>
+    </section>
+
+    <section class="conference-view" id="conference-view" hidden aria-labelledby="conference-title">
+      <h2 id="conference-title">Die Hafenkonferenz beginnt</h2>
+      <p class="conference-intro">Jetzt gehen die Personen direkt aufeinander ein. Wähle aus, wer eine Frage stellt. Nach jeder Antwort kann die angesprochene Person das Gespräch weiterführen. Du kannst beliebig oft zwischen den Positionen wechseln.</p>
+      <p class="color-help">Die Farbe zeigt dir immer, wer gerade die Frage stellt.</p>
+
+      <div class="speaker-switch" id="speaker-switch" aria-label="Fragende Person auswählen"></div>
+
+      <div class="conference-speaker">
+        <img id="speaker-image" src="station7-figuren/naturschuetzerin-v2.png" alt="">
+        <div>
+          <p class="role-label" id="speaker-role">Naturschutz</p>
+          <h3 id="speaker-name">Mara Petersen fragt</h3>
+          <p class="speaker-position" id="speaker-position">Ich möchte Menschen, Natur und Klima vor schädlichen Abgasen schützen. Hafenentscheidungen sollen Umweltfolgen deshalb ernst nehmen.</p>
+        </div>
+      </div>
+
+      <section class="question-panel" aria-labelledby="question-title">
+        <h3 id="question-title">Klicke eine Frage an:</h3>
+        <div class="question-list" id="question-list"></div>
+      </section>
+
+      <div class="conversation-history" id="conversation-history" aria-live="polite">
+        <p class="history-empty" id="history-empty">Noch wurde keine Rückfrage gestellt.</p>
+      </div>
+    </section>
+
+    <section class="decision-gate" id="decision-gate" aria-labelledby="gate-title" hidden>
+      <h2 id="gate-title">Bist du bereit für dein Urteil?</h2>
+      <p id="gate-message">Du kannst weiterdiskutieren oder jetzt deine eigene Meinung formulieren.</p>
+      <button class="btn primary" id="open-opinion" type="button">Meine Meinung bilden</button>
+    </section>
+
+    <section class="opinion-view" id="opinion-view" hidden aria-labelledby="opinion-title">
+      <div class="opinion-card" id="opinion-form-wrap">
+        <h2 id="opinion-title">Dein Urteil zur Hafenkonferenz</h2>
+        <p class="section-ru" lang="ru">Твоё мнение о конференции</p>
+        <p class="starter-label">Meinungsstarter – klicke einen Satzanfang an:</p>
+        <div class="starter-list">
+          <button class="starter" type="button" data-starter="Mich überzeugt die Meinung von ">Mich überzeugt die Meinung von …, weil …<span class="ru" lang="ru">Меня убеждает мнение …, потому что …</span></button>
+          <button class="starter" type="button" data-starter="Ich verstehe die Meinung von ">Ich verstehe die Meinung von …, aber …<span class="ru" lang="ru">Я понимаю мнение …, но …</span></button>
+          <button class="starter" type="button" data-starter="Bei meiner Entscheidung berücksichtige ich ">Bei meiner Entscheidung berücksichtige ich …<span class="ru" lang="ru">В своём решении я учитываю …</span></button>
+          <button class="starter" type="button" data-starter="Ein fairer Kompromiss wäre ">Ein fairer Kompromiss wäre …<span class="ru" lang="ru">Справедливым компромиссом было бы …</span></button>
+        </div>
+        <label class="response-label" for="opinion-text">Meine Meinung:</label>
+        <textarea id="opinion-text" maxlength="1500" placeholder="Schreibe hier deine Einschätzung …"></textarea>
+        <div class="response-footer">
+          <p class="char-count" id="char-count">0 / 1500 Zeichen</p>
+          <button class="btn primary" id="submit-opinion" type="button">Urteil abschließen</button>
+        </div>
+        <p class="form-message" id="form-message" aria-live="polite"></p>
+      </div>
+
+      <div class="result-card" id="result-card" hidden tabindex="-1">
+        <div class="result-mark" aria-hidden="true">✓</div>
+        <h2>Dein Urteil steht</h2>
+        <p class="section-ru" lang="ru">Твоё решение готово</p>
+        <p class="result-intro">Du hast alle vier Perspektiven geprüft und eine eigene Einschätzung formuliert.</p>
+        <div class="result-answer" id="result-answer"></div>
+        <div class="result-actions">
+          <button class="btn" id="edit-opinion" type="button">Urteil bearbeiten</button>
+          <button class="btn" id="restart" type="button">Station neu starten</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="source-dialog" aria-labelledby="source-dialog-title">
+    <div class="source-dialog-head">
+      <h2 id="source-dialog-title">Quelle</h2>
+      <button class="dialog-close" id="dialog-close" type="button" aria-label="Quellenfenster schließen">×</button>
+    </div>
+    <div class="source-dialog-body">
+      <a class="source-link" id="source-link" href="#" target="_blank" rel="noopener noreferrer">Quelle öffnen ↗</a>
+      <p class="source-meta" id="source-meta"></p>
+      <p class="source-note" id="source-note" hidden></p>
+    </div>
+  </dialog>
+
+  <p class="sr-only" id="live-region" aria-live="polite"></p>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const STORAGE_KEY = "station7-hafenkonferenz-v10";
+      const ACCESSED = "09.09.2026";
+      const ROLES = ["nature", "shipping", "work", "residents"];
+      const SOURCES = {
+        nabu: {
+          title: "NABU: Da liegt was in der Luft",
+          url: "https://www.nabu.de/umwelt-und-ressourcen/verkehr/schifffahrt/messungen/16819.html",
+          detail: "Abschnitt zu den NABU-Messungen im Hamburger Hafen.",
+          note: "Einordnung: ereignisbezogene NABU-Messung aus dem Jahr 2014; kein aktueller Durchschnittswert für den Hafen."
+        },
+        "nabu-video": {
+          title: "NABU-Video auf YouTube öffnen",
+          url: "https://www.youtube.com/watch?v=Q7cjw0U490U",
+          detail: "Video: „Hamburg, Du graue Perle! Lass Dich nicht zuqualmen!“ (2014)."
+        },
+        "nabu-map": {
+          title: "NABU-Messorte in Google Maps öffnen",
+          url: "https://www.google.com/maps/d/viewer?mid=1dfBJlO8zdjJGF-gsSigBeZm7S_4",
+          detail: "Interaktive Karte mit den auf der NABU-Seite verknüpften Hamburger Messorten."
+        },
+        "air-report": {
+          title: "Hamburger Luftmessnetz: Einfluss des Hafens auf die Hamburger Luft",
+          url: "https://luft.hamburg.de/resource/blob/774542/f9cb95ba61436c6b2760170cca508b5f/bericht-luftqualitaet-hafen-hamburg-2015-data.pdf",
+          detail: "PDF, Oktober 2014: Seiten 2, 5 und 7.",
+          note: "Einordnung: Die Untersuchung wertet vor allem Messungen aus den Jahren 2012 und 2013 aus und verwendet andere Messgrößen und Zeiträume als die NABU-Ereignismessung."
+        },
+        "ndr-port-supply": {
+          title: "NDR: Kampf um Riesenpötte – Wohin steuert Hamburgs Hafen?",
+          url: "https://www.ardmediathek.de/video/ndr-story/kampf-um-riesenpoette-wohin-steuert-hamburgs-hafen/ndr/Y3JpZDovL25kci5kZS8xMzkxXzIwMjItMTAtMTctMjItMDA",
+          detail: "Relevanter Videoabschnitt: 07:48–08:10."
+        },
+        "ndr-port-competition": {
+          title: "NDR: Kampf um Riesenpötte – Wohin steuert Hamburgs Hafen?",
+          url: "https://www.ardmediathek.de/video/ndr-story/kampf-um-riesenpoette-wohin-steuert-hamburgs-hafen/ndr/Y3JpZDovL25kci5kZS8xMzkxXzIwMjItMTAtMTctMjItMDA",
+          detail: "Relevante Videoabschnitte: 20:24–21:55 und 41:50–43:25."
+        },
+        "ndr-port-overview": {
+          title: "NDR: Kampf um Riesenpötte – Wohin steuert Hamburgs Hafen?",
+          url: "https://www.ardmediathek.de/video/ndr-story/kampf-um-riesenpoette-wohin-steuert-hamburgs-hafen/ndr/Y3JpZDovL25kci5kZS8xMzkxXzIwMjItMTAtMTctMjItMDA",
+          detail: "Beschreibung des NDR-Films zu Nutzen und Kosten der Elbvertiefung."
+        },
+        marpol: {
+          title: "NDR: Meeresverschmutzung – EU-Rechnungshof kontrolliert Hafen",
+          url: "https://www.ardmediathek.de/video/hamburg-journal/meeresverschmutzung-eu-rechnungshof-kontrolliert-hafen/ndr/Y3JpZDovL25kci5kZS8wNTIwZDA0OS1kOTgxLTRkZWMtYjU5NC0wNjQ4MmY1MGFjZjM",
+          detail: "NDR Hamburg Journal vom 04.03.2025.",
+          note: "Hinweis: Das Video ist laut ARD Mediathek nur bis 04.03.2027 verfügbar."
+        },
+        verdi: {
+          title: "ver.di: Maritime Wirtschaft",
+          url: "https://www.verdi.de/oeffentliche-private-dienste-hh/mein-arbeitsplatz/maritime-wirtschaft",
+          detail: "Themenseite der Gewerkschaft ver.di zur Arbeit in der maritimen Wirtschaft.",
+          note: "Einordnung: Die Quelle zeigt die Perspektive einer Gewerkschaft."
+        },
+        "welt-work": {
+          title: "WELT: „Wir sehen eine ganz hohe Attraktivität für die Arbeit im Hafen“",
+          url: "https://www.welt.de/regionales/hamburg/article6a227a91b20db0d89b655e72/neue-berufsbilder-wir-sehen-eine-ganz-hohe-attraktivitaet-fuer-die-arbeit-im-hafen.html",
+          detail: "Interview mit Martin Pieper, Geschäftsführer der Gesamthafenbetriebs-Gesellschaft; veröffentlicht am 15.06.2026.",
+          note: "Einordnung: Arbeitgeber-/Managementperspektive auf die Veränderung der Hafenarbeit."
+        },
+        "ndr-noise": {
+          title: "NDR: Tourismus im Portugiesenviertel – Anwohner klagen über Lärm",
+          url: "https://www.ardmediathek.de/video/hamburg-journal/tourismus-im-portugiesenviertel-anwohner-klagen-ueber-laerm/ndr/Y3JpZDovL25kci5kZS8xNGQ1OTFiNy1lMzRiLTQ4YWUtOGY0Ni1lMDA1ZDYyMzUzOGY",
+          detail: "Relevanter Videoabschnitt: 00:01–00:40.",
+          note: "Wichtig: Das Video ist laut ARD Mediathek nur bis 25.11.2026 um 19:30 Uhr verfügbar."
+        },
+        "ndr-noise-events": {
+          title: "NDR: Tourismus im Portugiesenviertel – Anwohner klagen über Lärm",
+          url: "https://www.ardmediathek.de/video/hamburg-journal/tourismus-im-portugiesenviertel-anwohner-klagen-ueber-laerm/ndr/Y3JpZDovL25kci5kZS8xNGQ1OTFiNy1lMzRiLTQ4YWUtOGY0Ni1lMDA1ZDYyMzUzOGY",
+          detail: "Relevanter Videoabschnitt: 00:01–00:40.",
+          note: "Wichtig: Das Video ist laut ARD Mediathek nur bis 25.11.2026 um 19:30 Uhr verfügbar."
+        },
+        "ndr-noise-tourism": {
+          title: "NDR: Tourismus im Portugiesenviertel – Anwohner klagen über Lärm",
+          url: "https://www.ardmediathek.de/video/hamburg-journal/tourismus-im-portugiesenviertel-anwohner-klagen-ueber-laerm/ndr/Y3JpZDovL25kci5kZS8xNGQ1OTFiNy1lMzRiLTQ4YWUtOGY0Ni1lMDA1ZDYyMzUzOGY",
+          detail: "Relevante Videoabschnitte: 01:32–02:15.",
+          note: "Wichtig: Das Video ist laut ARD Mediathek nur bis 25.11.2026 um 19:30 Uhr verfügbar."
+        },
+        wwf: {
+          title: "WWF: Die Stimmen der Anrainer",
+          url: "https://www.wwf.de/themen-projekte/projektregionen/tideelbe/die-stimmen-der-anrainer",
+          detail: "Abschnitt „Die Elbvertiefung – Eine Bedrohung für alle, die an und von der Elbe leben“.",
+          note: "Einordnung: Die Quelle zeigt die Perspektive einer Naturschutzorganisation und von Menschen an der Tideelbe."
+        }
+      };
+
+      const PEOPLE = {
+        nature: {
+          name: "Mara Petersen",
+          role: "Naturschutz",
+          image: "station7-figuren/naturschuetzerin-v2.png",
+          position: "Ich möchte Menschen, Natur und Klima vor schädlichen Schiffsabgasen schützen. Bei Hafenentscheidungen sollen Umweltfolgen deshalb ein großes Gewicht haben."
+        },
+        shipping: {
+          name: "Daniel Okafor",
+          role: "Reederei & Hafenwirtschaft",
+          image: "station7-figuren/reederei-vertreter.png",
+          position: "Ich möchte, dass der Hafen Waren zuverlässig umschlagen kann und für Schiffe gut erreichbar bleibt. Umweltregeln müssen schützen und zugleich im Hafen umsetzbar sein."
+        },
+        work: {
+          name: "Aylin Yılmaz",
+          role: "Hafenarbeit",
+          image: "station7-figuren/hafenarbeiterin.png",
+          position: "Ich möchte sichere, faire und zukunftsfähige Arbeitsplätze. Neue Technik soll den Menschen helfen und nicht einfach zu Arbeitsplatzverlust führen."
+        },
+        residents: {
+          name: "Thomas Becker",
+          role: "Anwohner*innen",
+          image: "station7-figuren/anwohner.png",
+          position: "Ich möchte gern in Hafennähe leben können. Ein lebendiger Hafen ist wichtig, aber Anwohner*innen brauchen auch Ruhe, Sicherheit und eine lebenswerte Umgebung."
+        }
+      };
+
+      const CONVERSATIONS = {
+        nature: [
+          {
+            target: "shipping",
+            question: "Daniel, wie willst du verhindern, dass der Wettbewerb mit anderen Häfen auf Kosten sauberer Luft geht?",
+            answer: [
+              { text: "Ich will Wettbewerb und Umweltschutz nicht gegeneinander ausspielen. MARPOL ist der Name für internationale Regeln gegen die Verschmutzung des Meeres durch Schiffe. Bei einer MARPOL-Kontrolle in Hamburg wurde geprüft, ob Projekte der Europäischen Union zum Umweltschutz richtig umgesetzt wurden.", source: "marpol" },
+              { text: "Ich muss aber auch beachten, dass Hamburg mit Rotterdam (Niederlande) und Antwerpen (Belgien) im Wettbewerb steht und Hapag-Lloyd zusätzlich in Wilhelmshaven investiert hat.", source: "ndr-port-competition" }
+            ]
+          },
+          {
+            target: "work",
+            question: "Aylin, wie können Hafenarbeitsplätze geschützt werden, ohne dass schädliche Abgase einfach bleiben?",
+            answer: [
+              { text: "Ich stelle Arbeitsplätze nicht über den Schutz der Umwelt. Meine Gewerkschaft ver.di sieht bei neuer Technik Chancen und Risiken und fordert gleichzeitig Schutz vor Arbeitsplatzverlust.", source: "verdi" },
+              { text: "Wenn neue Berufe wie Hafentechniker*in oder Hafenadministrator*in entstehen, müssen Beschäftigte die passende Ausbildung und Weiterbildung erhalten.", source: "welt-work" }
+            ]
+          },
+          {
+            target: "residents",
+            question: "Thomas, welche Folgen des Hafenlebens belasten deinen Alltag besonders?",
+            answer: [
+              { text: "Mich belastet vor allem, wenn Lärm durch Tourismus und große Veranstaltungen bis in die Nacht reicht. Manche Besucher*innen gehen außerdem nicht respektvoll mit den Menschen im Viertel um.", source: "ndr-noise" },
+              { text: "Weiter elbabwärts sorgen sich Menschen zusätzlich um Deiche, Fische, Apfelhöfe, Arbeitsplätze und ihre gesamte Lebensgrundlage.", source: "wwf" }
+            ]
+          }
+        ],
+        shipping: [
+          {
+            target: "nature",
+            question: "Mara, warum beunruhigt dich die NABU-Messung, obwohl eine amtliche Untersuchung keine Grenzwerte überschritten sah?",
+            answer: [
+              { text: "Mich beunruhigt, dass während der Einlaufparade 230.000 Partikel pro Kubikzentimeter Luft gemessen wurden, während der NABU rund 2.500 Partikel vergleichsweise akzeptabel nennt.", source: "nabu" },
+              { text: "Die amtliche Untersuchung betrachtete Messorte und Werte aus den Jahren 2012 und 2013. Sie fand keine Grenzwertüberschreitungen, erkannte bei Wind aus dem Hafen aber trotzdem einen Einfluss des Hafen- und Industriegebiets. Deshalb möchte ich beide Messungen ernst nehmen.", source: "air-report" }
+            ]
+          },
+          {
+            target: "work",
+            question: "Aylin, wie können Arbeitsplätze sicher bleiben, wenn der Hamburger Hafen im Wettbewerb zurückfällt?",
+            answer: [
+              { text: "Für meine Arbeit ist ein leistungsfähiger Hafen wichtig. Mehr als neun von zehn weltweit gehandelten Waren werden über das Wasser transportiert, und ungefähr jede vierte Ware kommt per Schiff nach Deutschland oder verlässt Deutschland so.", source: "verdi" },
+              { text: "Aber Wettbewerb allein schützt mich nicht. ver.di fordert verlässlichen Schutz vor Arbeitsplatzverlust sowie gute Löhne und Arbeitsbedingungen.", source: "verdi" }
+            ]
+          },
+          {
+            target: "residents",
+            question: "Thomas, welche Hafenveranstaltungen sollten sich ändern, damit Anwohner*innen nachts mehr Ruhe haben?",
+            answer: [
+              { text: "Besonders beim Hafengeburtstag, beim Schlagermove und bei den Cruise Days brauchen wir Regeln, die nächtlichen Lärm begrenzen und einen respektvollen Umgang fördern.", source: "ndr-noise-events" },
+              { text: "Ich weiß, dass Tourismus wirtschaftliche Vorteile bringt. Trotzdem sollen auch die Menschen, die hier wohnen, ihre Stadt genießen können.", source: "ndr-noise-tourism" }
+            ]
+          }
+        ],
+        work: [
+          {
+            target: "shipping",
+            question: "Daniel, wie sorgst du dafür, dass Automatisierung nicht einfach Arbeitsplätze verschwinden lässt?",
+            answer: [
+              { text: "Ich kann nicht versprechen, dass jede Aufgabe gleich bleibt. Durch Automatisierung kann weniger Handarbeit gebraucht werden.", source: "welt-work" },
+              { text: "Gleichzeitig entstehen neue qualifizierte Berufe wie Hafentechniker*in und Hafenadministrator*in. Deshalb müssen Veränderungen früh gemeinsam mit Beschäftigten geplant und passende Weiterbildungen angeboten werden.", source: "welt-work" }
+            ]
+          },
+          {
+            target: "nature",
+            question: "Mara, wie können strengere Umweltregeln umgesetzt werden, ohne dass Beschäftigte ihre Arbeit verlieren?",
+            answer: [
+              { text: "Mein Ziel ist nicht, Hafenarbeit abzuschaffen. Ich möchte die schädlichen Abgase verringern. Der NABU fordert dafür Filter an Schiffen und den Verzicht auf Schweröl.", source: "nabu" },
+              { text: "Weil Messort, Zeitraum und Windrichtung die Ergebnisse beeinflussen, sollen Entscheidungen auf mehrere passende Messungen gestützt werden.", source: "air-report" }
+            ]
+          },
+          {
+            target: "residents",
+            question: "Thomas, warum soll deine Lebensqualität bei Entscheidungen genauso wichtig sein wie unsere Hafenarbeitsplätze?",
+            answer: [
+              { text: "Ich will Hafenarbeitsplätze nicht kleinreden. Aber auch Fischer*innen, Menschen auf Apfelhöfen und andere Elbanrainer*innen sorgen sich um ihre Arbeit und ihre Lebensgrundlage.", source: "wwf" },
+              { text: "Ich bin außerdem nicht überzeugt, dass ohne eine weitere Elbvertiefung nachweislich Hafenarbeitsplätze verloren gehen. Deshalb sollten wir verschiedene Arbeitsplätze und Lebensräume gemeinsam schützen.", source: "wwf" }
+            ]
+          }
+        ],
+        residents: [
+          {
+            target: "shipping",
+            question: "Daniel, warum sollen wirtschaftliche Vorteile wichtiger sein als unsere Ruhe in der Nacht?",
+            answer: [
+              { text: "Wirtschaftliche Vorteile sind für mich nicht automatisch wichtiger als eure Ruhe. Tourismus bringt der Stadt Vorteile, aber auch Einheimische sollen Hamburg genießen können.", source: "ndr-noise-tourism" },
+              { text: "Ich möchte trotzdem daran erinnern, dass der Güterumschlag im Hafen wichtig für die Versorgung Deutschlands und benachbarter Länder ist. Wir brauchen Regeln, die beides berücksichtigen.", source: "ndr-port-supply" }
+            ]
+          },
+          {
+            target: "work",
+            question: "Aylin, warum stellst du Arbeitsplätze über meinen Lebensraum und meine Ruhe?",
+            answer: [
+              { text: "Ich stelle Arbeitsplätze nicht über deinen Lebensraum. Ich möchte, dass Hafenarbeit fair und zukunftsfähig bleibt und Beschäftigte vor Arbeitsplatzverlust geschützt werden.", source: "verdi" },
+              { text: "Neue Technik kann neue qualifizierte Berufe schaffen. Wenn wir Veränderungen gut planen, können wir gute Arbeit, Ruhe und Umweltschutz gemeinsam berücksichtigen.", source: "welt-work" }
+            ]
+          },
+          {
+            target: "nature",
+            question: "Mara, warum zeigen die NABU-Messung und die amtliche Untersuchung so unterschiedliche Ergebnisse?",
+            answer: [
+              { text: "Die NABU-Messung fand während einer Einlaufparade direkt im Hafen statt und zählte sehr kleine Partikel. Dabei wurden 230.000 Partikel pro Kubikzentimeter Luft gemessen.", source: "nabu" },
+              { text: "Die amtliche Untersuchung betrachtete andere Messgrößen, Orte und längere Zeiträume in den Jahren 2012 und 2013. Sie fand keine Grenzwertüberschreitungen, erkannte bei Wind aus dem Hafen aber einen Einfluss des Hafen- und Industriegebiets. Die Ergebnisse widersprechen sich deshalb nicht automatisch.", source: "air-report" }
+            ]
+          }
+        ]
+      };
+
+      const cards = Array.from(document.querySelectorAll(".flip-card"));
+      const cardGrid = document.querySelector(".card-grid");
+      const statusDots = Array.from(document.querySelectorAll(".status-dot"));
+      const statusCount = document.getElementById("status-count");
+      const conferenceView = document.getElementById("conference-view");
+      const speakerSwitch = document.getElementById("speaker-switch");
+      const speakerImage = document.getElementById("speaker-image");
+      const speakerRole = document.getElementById("speaker-role");
+      const speakerName = document.getElementById("speaker-name");
+      const speakerPosition = document.getElementById("speaker-position");
+      const questionList = document.getElementById("question-list");
+      const conversationHistory = document.getElementById("conversation-history");
+      const historyEmpty = document.getElementById("history-empty");
+      const decisionGate = document.getElementById("decision-gate");
+      const gateMessage = document.getElementById("gate-message");
+      const openOpinion = document.getElementById("open-opinion");
+      const opinionView = document.getElementById("opinion-view");
+      const opinionFormWrap = document.getElementById("opinion-form-wrap");
+      const opinionText = document.getElementById("opinion-text");
+      const charCount = document.getElementById("char-count");
+      const formMessage = document.getElementById("form-message");
+      const submitOpinion = document.getElementById("submit-opinion");
+      const resultCard = document.getElementById("result-card");
+      const resultAnswer = document.getElementById("result-answer");
+      const editOpinion = document.getElementById("edit-opinion");
+      const restart = document.getElementById("restart");
+      const sourceDialog = document.getElementById("source-dialog");
+      const sourceDialogTitle = document.getElementById("source-dialog-title");
+      const sourceLink = document.getElementById("source-link");
+      const sourceMeta = document.getElementById("source-meta");
+      const sourceNote = document.getElementById("source-note");
+      const dialogClose = document.getElementById("dialog-close");
+      const liveRegion = document.getElementById("live-region");
+
+      let visited = new Set();
+      let submitted = false;
+      let introIndex = 0;
+      let conferenceStarted = false;
+      let currentSpeaker = "nature";
+      let exchangeCount = 0;
+
+      function announce(message) { liveRegion.textContent = message; }
+
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            visited: Array.from(visited),
+            opinion: opinionText.value,
+            submitted: submitted,
+            conferenceStarted: conferenceStarted,
+            currentSpeaker: currentSpeaker
+          }));
+        } catch (error) { /* Die Aufgabe funktioniert auch ohne lokalen Speicher. */ }
+      }
+
+      function loadState() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+          if (!stored) return;
+          visited = new Set((stored.visited || []).filter((role) => ROLES.includes(role)));
+          opinionText.value = typeof stored.opinion === "string" ? stored.opinion.slice(0, 1500) : "";
+          submitted = Boolean(stored.submitted && opinionText.value.trim());
+          conferenceStarted = Boolean(stored.conferenceStarted && visited.size === ROLES.length);
+          currentSpeaker = PEOPLE[stored.currentSpeaker] ? stored.currentSpeaker : "nature";
+          introIndex = Math.min(visited.size, ROLES.length - 1);
+        } catch (error) { visited = new Set(); }
+      }
+
+      function renderStatus() {
+        statusDots.forEach((dot) => dot.classList.toggle("visited", visited.has(dot.dataset.dot)));
+        cards.forEach((card) => card.classList.toggle("visited", visited.has(card.dataset.role)));
+        statusCount.textContent = visited.size + " / 4";
+        cardGrid.hidden = conferenceStarted;
+        conferenceView.hidden = !conferenceStarted;
+        decisionGate.hidden = !conferenceStarted;
+        decisionGate.classList.toggle("ready", conferenceStarted);
+        gateMessage.textContent = "Du kannst weitere Rückfragen stellen oder jetzt deine eigene Meinung formulieren.";
+      }
+
+      function renderIntro() {
+        cards.forEach((card, index) => card.classList.toggle("intro-active", !conferenceStarted && index === introIndex));
+      }
+
+      function closeAllCards(exceptRole) {
+        cards.forEach((card) => {
+          if (card.dataset.role === exceptRole) return;
+          const front = card.querySelector(".card-front");
+          const back = card.querySelector(".card-back");
+          card.classList.remove("is-flipped");
+          front.setAttribute("aria-expanded", "false");
+          front.setAttribute("aria-hidden", "false");
+          front.tabIndex = 0;
+          back.setAttribute("aria-hidden", "true");
+          back.inert = true;
+        });
+      }
+
+      function openCard(card, shouldScroll) {
+        const role = card.dataset.role;
+        closeAllCards(role);
+        card.classList.add("is-flipped");
+        const front = card.querySelector(".card-front");
+        const back = card.querySelector(".card-back");
+        front.setAttribute("aria-expanded", "true");
+        front.setAttribute("aria-hidden", "true");
+        front.tabIndex = -1;
+        back.setAttribute("aria-hidden", "false");
+        back.inert = false;
+        visited.add(role);
+        renderStatus();
+        saveState();
+        if (shouldScroll) card.scrollIntoView({ behavior: "smooth", block: "center" });
+        window.setTimeout(() => card.querySelector(".close-card").focus(), 660);
+        announce("Position gelesen. " + visited.size + " von 4 Positionen gelesen.");
+      }
+
+      cards.forEach((card) => {
+        const front = card.querySelector(".card-front");
+        const close = card.querySelector(".close-card");
+        front.addEventListener("click", () => openCard(card, false));
+        close.addEventListener("click", () => {
+          const back = card.querySelector(".card-back");
+          card.classList.remove("is-flipped");
+          front.setAttribute("aria-expanded", "false");
+          front.setAttribute("aria-hidden", "false");
+          front.tabIndex = 0;
+          back.setAttribute("aria-hidden", "true");
+          back.inert = true;
+          window.setTimeout(() => front.focus(), 640);
+        });
+      });
+
+      document.querySelectorAll("[data-next-role]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const nextIndex = ROLES.indexOf(button.dataset.nextRole);
+          if (nextIndex < 0) return;
+          closeAllCards();
+          introIndex = nextIndex;
+          renderIntro();
+          const target = cards[nextIndex];
+          target.scrollIntoView({ behavior: "smooth", block: "center" });
+          window.setTimeout(() => target.querySelector(".card-front").focus(), 500);
+        });
+      });
+
+      document.querySelector("[data-finish-intro]").addEventListener("click", () => {
+        if (visited.size !== ROLES.length) return;
+        conferenceStarted = true;
+        currentSpeaker = "residents";
+        closeAllCards();
+        renderIntro();
+        renderStatus();
+        renderConference(currentSpeaker);
+        saveState();
+        conferenceView.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      function renderSpeakerSwitch() {
+        speakerSwitch.textContent = "";
+        ROLES.forEach((role) => {
+          const person = PEOPLE[role];
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.person = role;
+          button.textContent = person.name;
+          button.setAttribute("aria-pressed", role === currentSpeaker ? "true" : "false");
+          button.addEventListener("click", () => renderConference(role));
+          speakerSwitch.appendChild(button);
+        });
+      }
+
+      function renderConference(role) {
+        currentSpeaker = role;
+        const person = PEOPLE[role];
+        conferenceView.dataset.speaker = role;
+        speakerImage.src = person.image;
+        speakerImage.alt = "Illustration von " + person.name;
+        speakerRole.textContent = person.role;
+        speakerName.textContent = person.name + " fragt";
+        speakerPosition.textContent = person.position;
+        questionList.textContent = "";
+
+        CONVERSATIONS[role].forEach((exchange) => {
+          const target = PEOPLE[exchange.target];
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "question-choice";
+          button.textContent = "An " + target.name + ": " + exchange.question;
+          button.addEventListener("click", () => showExchange(role, exchange));
+          questionList.appendChild(button);
+        });
+
+        renderSpeakerSwitch();
+        saveState();
+      }
+
+      function showExchange(askerRole, exchange) {
+        const asker = PEOPLE[askerRole];
+        const target = PEOPLE[exchange.target];
+        historyEmpty.hidden = true;
+        exchangeCount += 1;
+
+        const article = document.createElement("article");
+        article.className = "exchange";
+        article.dataset.asker = askerRole;
+        article.tabIndex = -1;
+
+        const question = document.createElement("div");
+        question.className = "question-bubble";
+        const questionLabel = document.createElement("small");
+        questionLabel.textContent = "Gesprächsschritt " + exchangeCount + " · Frage von " + asker.name + " an " + target.name;
+        const questionText = document.createElement("strong");
+        questionText.textContent = exchange.question;
+        question.append(questionLabel, questionText);
+
+        const answerRow = document.createElement("div");
+        answerRow.className = "answer-row";
+        const image = document.createElement("img");
+        image.src = target.image;
+        image.alt = "Illustration von " + target.name;
+        const copy = document.createElement("div");
+        copy.className = "answer-copy";
+        const roleLabel = document.createElement("p");
+        roleLabel.className = "role-label";
+        roleLabel.textContent = target.role + " antwortet";
+        const heading = document.createElement("h3");
+        heading.textContent = target.name;
+        const position = document.createElement("p");
+        position.className = "answer-position";
+        position.textContent = target.position;
+        copy.append(roleLabel, heading, position);
+
+        exchange.answer.forEach((part) => {
+          const paragraph = document.createElement("p");
+          paragraph.append(document.createTextNode(part.text + " "));
+          const sourceButton = document.createElement("button");
+          sourceButton.type = "button";
+          sourceButton.className = "source-button";
+          sourceButton.dataset.source = part.source;
+          sourceButton.textContent = "Quelle ↗";
+          paragraph.appendChild(sourceButton);
+          copy.appendChild(paragraph);
+        });
+
+        const continueButton = document.createElement("button");
+        continueButton.type = "button";
+        continueButton.className = "continue-talk";
+        continueButton.textContent = "Mit " + target.name + " weiterfragen →";
+        continueButton.addEventListener("click", () => {
+          renderConference(exchange.target);
+          conferenceView.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+        copy.appendChild(continueButton);
+        answerRow.append(image, copy);
+        article.append(question, answerRow);
+        conversationHistory.appendChild(article);
+        bindSourceButtons(article);
+        article.focus();
+        article.scrollIntoView({ behavior: "smooth", block: "center" });
+        announce(target.name + " hat auf die Frage geantwortet.");
+      }
+
+      function openSource(id) {
+        const source = SOURCES[id];
+        if (!source) return;
+        sourceDialogTitle.textContent = "Quelle";
+        sourceLink.textContent = source.title + " ↗";
+        sourceLink.href = source.url;
+        sourceMeta.textContent = source.detail + " Letzter Aufruf am: " + ACCESSED + ".";
+        sourceNote.textContent = source.note || "";
+        sourceNote.hidden = !source.note;
+        if (typeof sourceDialog.showModal === "function") sourceDialog.showModal();
+        else window.open(source.url, "_blank", "noopener");
+      }
+
+      function bindSourceButtons(root) {
+        root.querySelectorAll("[data-source]").forEach((button) => {
+          if (button.dataset.sourceBound === "true") return;
+          button.dataset.sourceBound = "true";
+          button.addEventListener("click", () => openSource(button.dataset.source));
+        });
+      }
+
+      bindSourceButtons(document);
+
+      dialogClose.addEventListener("click", () => sourceDialog.close());
+      sourceDialog.addEventListener("click", (event) => {
+        const bounds = sourceDialog.getBoundingClientRect();
+        const outside = event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+        if (outside) sourceDialog.close();
+      });
+
+      openOpinion.addEventListener("click", () => {
+        opinionView.hidden = false;
+        opinionFormWrap.hidden = false;
+        resultCard.hidden = true;
+        opinionView.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.setTimeout(() => opinionText.focus(), 450);
+      });
+
+      document.querySelectorAll(".starter").forEach((button) => {
+        button.addEventListener("click", () => {
+          const prefix = opinionText.value.trim() ? "\n" : "";
+          opinionText.value = (opinionText.value + prefix + button.dataset.starter).slice(0, 1500);
+          opinionText.focus();
+          opinionText.setSelectionRange(opinionText.value.length, opinionText.value.length);
+          updateCount();
+          saveState();
+        });
+      });
+
+      function updateCount() {
+        charCount.textContent = opinionText.value.length + " / 1500 Zeichen";
+        formMessage.textContent = "";
+      }
+
+      opinionText.addEventListener("input", () => { updateCount(); saveState(); });
+
+      submitOpinion.addEventListener("click", () => {
+        const answer = opinionText.value.trim();
+        if (answer.length < 45) {
+          formMessage.textContent = "Ergänze deinen Satzstarter bitte mit einer Begründung.";
+          opinionText.focus();
+          return;
+        }
+        submitted = true;
+        resultAnswer.textContent = answer;
+        opinionFormWrap.hidden = true;
+        resultCard.hidden = false;
+        saveState();
+        resultCard.focus();
+        resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      editOpinion.addEventListener("click", () => {
+        submitted = false;
+        resultCard.hidden = true;
+        opinionFormWrap.hidden = false;
+        saveState();
+        opinionText.focus();
+      });
+
+      restart.addEventListener("click", () => {
+        visited = new Set();
+        submitted = false;
+        conferenceStarted = false;
+        currentSpeaker = "nature";
+        introIndex = 0;
+        exchangeCount = 0;
+        opinionText.value = "";
+        cards.forEach((card) => {
+          const front = card.querySelector(".card-front");
+          const back = card.querySelector(".card-back");
+          card.classList.remove("is-flipped", "visited");
+          front.setAttribute("aria-expanded", "false");
+          front.setAttribute("aria-hidden", "false");
+          front.tabIndex = 0;
+          back.setAttribute("aria-hidden", "true");
+          back.inert = true;
+        });
+        conversationHistory.querySelectorAll(".exchange").forEach((exchange) => exchange.remove());
+        historyEmpty.hidden = false;
+        opinionView.hidden = true;
+        opinionFormWrap.hidden = false;
+        resultCard.hidden = true;
+        updateCount();
+        renderStatus();
+        renderIntro();
+        try { localStorage.removeItem(STORAGE_KEY); } catch (error) {}
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+
+      loadState();
+      updateCount();
+      renderStatus();
+      renderIntro();
+      if (conferenceStarted) renderConference(currentSpeaker);
+      if (visited.size === ROLES.length && (opinionText.value || submitted)) opinionView.hidden = false;
+      if (submitted) {
+        opinionFormWrap.hidden = true;
+        resultCard.hidden = false;
+        resultAnswer.textContent = opinionText.value.trim();
+      }
+    }());
+  </script>
+</body>
+</html>
